@@ -1,6 +1,12 @@
 import pygame
 import sys
 
+def hypotenuse(x, y):
+    x = x ** 2  
+    y = y ** 2
+    e = x + y
+    return e
+
 
 
 def mid(px, destinationx, py, destinationy):
@@ -44,9 +50,9 @@ def mid(px, destinationx, py, destinationy):
     elif py == destinationy:
         placeholdery = 0
 
-    mid.append(placeholdery)
+    middle.append(placeholdery)
     
-    return mid
+    return middle
 
 def create_app_window(width, height):
     print(f'\nWelcome. The plane goes from -{width/2} to {width/2} in both the x and y directions')

@@ -47,6 +47,13 @@ p2mid = mid(p2x, destinationx, p2y, destinationy)
 print(p1mid)
 print(p2mid)
 
+#math
+placeholderx = p1mid[0]
+placeholdery = p1mid[2]
+
+
+p1mid.append(placeholder)
+
 
 
 app_surf, app_surf_rect = create_app_window(sizex, sizey)
