@@ -1,6 +1,7 @@
 import random
 import pygame
 import sys
+from termcolor import colored
 from triplesdictionary import triples
 
 pygame.init()
@@ -49,14 +50,14 @@ def gradient(x1, y1, x2, y2):
     var = round(var, 1)
     return var
 
-def printstats(name, x, y):
-    print(f'\n\n{name} Information')
-    print(f'{name} Coordinates: {x}, {y}')
+def printstats(name, x, y, colour):
+    print(colored(f'{name}', colour) + ' Information')
+    print(colored(f'{name}', colour) + f' Coordinates: {x}, {y}')
 
 
 def create_app_window(width, height):
     print(f'\nWelcome. The plane goes from -{width/2} to {width/2} in both the x and y directions')
-    pygame.display.set_caption("App Name TBD")           
+    pygame.display.set_caption("<App Name> TBD")           
     app_dimensions = (width + 10, height + 10)
     app_surf = pygame.display.set_mode(app_dimensions)
     app_surf_rect = app_surf.get_rect()
@@ -64,22 +65,14 @@ def create_app_window(width, height):
 
 def app_surf_update(destdict, p1dict, p2dict):
     app_surf.fill('white')
-    # draw the x-axis and the y-axis
-    # pygame.draw.line() needs the display surfaceto draw on, colour of the line, starting coordinates and ending coordinates
     pygame.draw.line(app_surf, 'grey',(0,app_surf_rect.height/2),(app_surf_rect.width,app_surf_rect.height/2),width=1)
     pygame.draw.line(app_surf, 'grey',(app_surf_rect.width/2, 0),(app_surf_rect.width/2,app_surf_rect.height),width=1)
-    
-    # draw destination
-    # pygame.draw.circle() needs the surface to draw on, colour, coordinates, circle radius and line width
     pygame.draw.circle(app_surf, 'black',destdict['Pygame Coords'], radius = 3, width = 3)
-    pygame.draw.circle(app_surf, 'black',destdict['Pygame Coords'], radius = 10, width = 3)
-
-
-    # draw player one and player two
+    pygame.draw.circle(app_surf, 'black',destdict['Pygame Coords'], radius = 10, width = 1)
     pygame.draw.circle(app_surf, p1dict['Colour'], p1dict['Pygame Coords'], radius = 3, width = 2)
     pygame.draw.circle(app_surf, p2dict['Colour'], p2dict['Pygame Coords'], radius = 3, width = 2)
-    pygame.draw.circle(app_surf, p1dict['Colour'], p1dict['Pygame Coords'], radius = 10, width = 2)
-    pygame.draw.circle(app_surf, p2dict['Colour'], p2dict['Pygame Coords'], radius = 10, width = 2)
+    pygame.draw.circle(app_surf, p1dict['Colour'], p1dict['Pygame Coords'], radius = 10, width = 1)
+    pygame.draw.circle(app_surf, p2dict['Colour'], p2dict['Pygame Coords'], radius = 10, width = 1)
 
 def refresh_window():
     pygame.display.update() # refresh the screen with what we drew inside the app_surf_update() function
@@ -94,21 +87,10 @@ def conv_cartesian_to_pygame_coords(x,y):
     pygame_y = -y + app_surf_rect.height /2
     return(pygame_x, pygame_y)              # return the 'weird' coordinates that pygame can use
 
-def initialise_entities(x, y):
-    # initially set the requested coordinates to random values
-    # each time you call randint() you get new random coords
-    p1_rand_x, p1_rand_y = random.randint(pos_to_neg(x),x), random.randint(pos_to_neg(y),y)
-    p1dict['Cartesian Coords'] = (p1_rand_x, p1_rand_y)     # store the random cartesian coordinates
-    p1dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p1_rand_x, p1_rand_y) # convert and store pygame coordinates
-
-    p2_rand_x, p2_rand_y = random.randint(pos_to_neg(x),x), random.randint(pos_to_neg(y),y)
-    p2dict['Cartesian Coords'] = (p2_rand_x, p2_rand_y)
-    p2dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p2_rand_x, p2_rand_y)
-
-    dest_rand_x, dest_rand_y = random.randint(pos_to_neg(x),x), random.randint(pos_to_neg(y),y)
-    destdict['Cartesian Coords'] = (dest_rand_x, dest_rand_y)
-    destdict['Pygame Coords'] = conv_cartesian_to_pygame_coords(dest_rand_x, dest_rand_y)
-    # no need to return entities. They are dictionaries so the function can modify them directly (see the Python Functions tutorial on Connect Notices)
+def initialise_entities():
+    p1dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p1dict['X'], p1dict['Y']) # convert and store pygame coordinates
+    p2dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p2dict['X'], p2dict['Y'])
+    destdict['Pygame Coords'] = conv_cartesian_to_pygame_coords(destdict['X'], destdict['Y'])
 
 
 
@@ -120,7 +102,7 @@ sizey = int(input('What size plane do you want (y)? '))
 # 1: x difference  2: x midpoint  3: y difference  4: y midpoint  5: actual distance  6: distance to midpoint
 
 p1dict = {
-    'Name': 'Player 1',
+    'Name': 'Player ONE',
     'X': random.randint(pos_to_neg(sizex),sizex),
     'Y': random.randint(pos_to_neg(sizey),sizey),
     'Pygame Coords': None,
@@ -128,7 +110,7 @@ p1dict = {
 }
 
 p2dict = {
-    'Name': 'Player 2',
+    'Name': 'Player TWO',
     'X': random.randint(pos_to_neg(sizex),sizex),
     'Y': random.randint(pos_to_neg(sizey), sizey),
     'Pygame Coords': None,
@@ -145,11 +127,9 @@ destdict = {
 
 app_surf, app_surf_rect = create_app_window(sizex*2, sizey*2)
 
-p1dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p1dict['X'], p1dict['Y'])
-p2dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p2dict['X'], p2dict['Y'])
-destdict['Pygame Coords'] = conv_cartesian_to_pygame_coords(destdict['X'], destdict['Y'])
+initialise_entities()
 
-directions = { #angels of directions
+angles = { #angels of directions
    1: (0, 45),
    2: (45, 90),
    3: (90, 135),
@@ -159,6 +139,8 @@ directions = { #angels of directions
    7: (270, 315),
    8: (315, 360)
 }
+
+directions = [1,2,3,4,5,6,7,8]
  # math
 p1_to_destination = distance(p1dict['X'], p1dict['Y'], destdict['X'], destdict['Y'])
 p2_to_destination = distance(p2dict['X'], p2dict['Y'], destdict['X'], destdict['Y'])
@@ -179,7 +161,7 @@ players_mid = remove(players_mid)
 
 app_surf_update(destdict, p1dict, p2dict)
 #player 1 stats
-printstats(p1dict['Name'], p1dict['X'], p1dict['Y'])
+printstats(p1dict['Name'], p1dict['X'], p1dict['Y'], 'red')
 print(f'Distance to Destination: {p1_to_destination}')
 print(f'Distance to Player 2: {players_distance}')
 print(f'Gradient with Destination: {grad_p1_destination}')
@@ -188,7 +170,7 @@ print(f'Midpoint Coords with Destination: {mid_p1_destination}')
 print(f'Midpoint Coords with Player 2: {players_mid}')
 print('\n')
 #player 2 stats
-printstats(p2dict['Name'], p2dict['X'], p2dict['Y'])
+printstats(p2dict['Name'], p2dict['X'], p2dict['Y'], p2dict['Colour'])
 print(f'Distance to Destination: {p2_to_destination}')
 print(f'Distance to Player 2: {players_distance}')
 print(f'Gradient with Destination: {grad_p2_destination}')
@@ -197,7 +179,7 @@ print(f'Midpoint Coords with Destination: {mid_p2_destination}')
 print(f'Midpoint Coords with Player 2: {players_mid}')
 print('\n')
 #destination stats
-printstats(destdict['Name'], destdict['X'], destdict['Y'])
+printstats(destdict['Name'], destdict['X'], destdict['Y'], 'grey')
 print(f'Distance to Player 1: {p1_to_destination}')
 print(f'Distance to Player 2: {p2_to_destination}')
 print(f'Gradient with Player 1: {grad_p1_destination}')
@@ -207,20 +189,29 @@ print(f'Midpoint Coords with Player 2: {mid_p2_destination}')
 print('\n')
 turns = 1
 win = False
+direction = ''
+refresh_window()
 while win != True:                             # The gameplay happens in here. Infinite loop until the user quits or a player wins"
    for event in pygame.event.get():    # scan through all 'events' happening to the window such as mouse clicks and key presses
        if event.type == pygame.QUIT:   # must have this else the user can't quit!
            pygame.quit()
            sys.exit()
        if turns == 1:     # if the left button was pressed, ask for player 1 new coordinates (for you, you must ask for distance and direction!)
-           direction = input("Player ONE: Enter the direction you would like to go: ") # You neeed to ask for distance and direction
-           dist = int(input("Player ONE: Enter the distance tou would like to go: "))
+           print(colored('Player ONE:', p1dict['Colour']))
+           while True:
+                try:
+                    dist, direction = int(input('Please enter the distance and direction you wish to travel in the format <distance>, <direction>: ')).split(',')
+                except ValueError:
+                    print('Please use integers in the format <distance>, <direction>.')
+                else:
+                    break
            turns = 2
+           
        elif turns == 2:    # if the right buttom was pressed, as for player two's request (you must has for distance and direction)
            dist, direction = input("Enter new coordinates for Player TWO: e.g. 60, -155: ").split(",") # You need to ask for distance and direction
-           distance = int(dist)
-           p2dict['Cartesian Coords'] = (distance, direction)
-           p2dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(distance, direction)
+           dist = int(dist)
+           p2dict['Cartesian Coords'] = (dist, direction)
+           p2dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(dist, direction)
            turns = 1
                # If you plan to use some or all of my code in your investigation, email me with the subject line of you want to name the game. Be creative :)
            
