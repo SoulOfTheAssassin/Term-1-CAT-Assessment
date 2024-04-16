@@ -1,5 +1,6 @@
 import random
 import pygame
+import time
 import sys
 from termcolor import colored
 from triplesdictionary import triples
@@ -30,6 +31,21 @@ def distance(px, py, dx, dy):  #
 
 def pos_to_neg(x):
     return 0-x
+
+def slowprint(str, speed):
+    for char in str:
+        print(char, end='')
+        sys.stdout.flush()
+        time.sleep(speed)
+    time.sleep(1)
+    
+# def slowinput(string, speed):
+#     for char in string:
+#         input = print(char, end='')
+#         sys.stdout.flush()
+#         time.sleep(speed)
+#     time.sleep(1)
+#     return str(input)
 
 def difference(x1, x2):
     if x1 < x2:
@@ -70,11 +86,11 @@ def app_surf_update(destdict, p1dict, p2dict):
     pygame.draw.line(app_surf, 'grey',(0,app_surf_rect.height/2),(app_surf_rect.width,app_surf_rect.height/2),width=1)
     pygame.draw.line(app_surf, 'grey',(app_surf_rect.width/2, 0),(app_surf_rect.width/2,app_surf_rect.height),width=1)
     pygame.draw.circle(app_surf, 'black',destdict['Pygame Coords'], radius = 3, width = 3)
-    pygame.draw.circle(app_surf, 'black',destdict['Pygame Coords'], radius = 10, width = 1)
+    pygame.draw.circle(app_surf, 'black',destdict['Pygame Coords'], radius = playersize, width = 1)
     pygame.draw.circle(app_surf, p1dict['Colour'], p1dict['Pygame Coords'], radius = 3, width = 2)
     pygame.draw.circle(app_surf, p2dict['Colour'], p2dict['Pygame Coords'], radius = 3, width = 2)
-    pygame.draw.circle(app_surf, p1dict['Colour'], p1dict['Pygame Coords'], radius = 10, width = 1)
-    pygame.draw.circle(app_surf, p2dict['Colour'], p2dict['Pygame Coords'], radius = 10, width = 1)
+    pygame.draw.circle(app_surf, p1dict['Colour'], p1dict['Pygame Coords'], radius = playersize, width = 1)
+    pygame.draw.circle(app_surf, p2dict['Colour'], p2dict['Pygame Coords'], radius = playersize, width = 1)
 
 def refresh_window():
     pygame.display.update() # refresh the screen with what we drew inside the app_surf_update() function
@@ -148,31 +164,32 @@ def checkwin(dictionary1, dictionary2, dictionary3, lastmove):
              return "NPC"
 
 def inputcheck():
-    print('Please enter move in format: distance <space> direction.') 
-    print('The distance and direction must be natural numbers.') 
-    print("The distance must be 5 or larger.")  
-    print("The direction must to be from 1-8.") 
+    slowprint('Please enter move in format: distance <space> direction.', 0.085) 
+    slowprint('The distance and direction must be natural numbers.', 0.085) 
+    slowprint("The distance must be 5 or larger.", 0.085)  
+    slowprint("The direction must to be from 1-8.", 0.085) 
     while True: 
-        move = input("Enter your move: ").strip() 
+        move = input("Enter your move: ")
+        move = move.strip()
         try: 
             move=move.split(" ") # To get the distance and direction
         except:
-            print("Please enter in format: distance <space> direction. ")
+            slowprint("Please enter in format: distance <space> direction. ", 0.085)
             continue
         try:
             distance=int(move[0])
             direction=int(move[1])
         except:
-            print("The distance and direction need to be natural numbers.")
+            slowprint("The distance and direction need to be natural numbers.", 0.085)
             continue
         if direction > 8 or direction < 1:
-            print("The direction has to be 1-8.")
+            slowprint("The direction has to be 1-8.", 0.085)
         elif distance < 0:
-            print("The distance cannot be negative.")
+            slowprint("The distance cannot be negative.", 0.085)
         elif distance < 5:
-            print("The distance must be 5 or larger. ")
+            slowprint("The distance must be 5 or larger. ", 0.085)
         else:
-            print("Move was successful.")
+            slowprint("Move was successful.", 0.085)
             return distance, direction
 
 
@@ -182,35 +199,56 @@ p2colour = 'blue'
 npccolour = 'green'
 npctoggle = False
 functionloop = True
-sizex = 400
-sizey = 400
-functionlist = ['planesize', 'togglenpc', 'playersize', 'playercolour', 'help', 'printsettings', 'start']
-print('Here are a list of functions: ')
-print('PlaneSize: adjust the size of the plane.')
-print('ToggleNPC: Toggle the NPC.')
-print('PlayerSize: adjust the size of the players.')
-print('PlayerColour: change the player colours.')
-print('PrintSettings: prints all current settings.')
-print('Help: prints the rules.')
-print('Start: starts the game.')
+sizex = 800
+sizey = 800
+size = [1,2,3,4,5,6,7,8,9,10]
+playersize = 5.0
+functionlist = ['planesize', 'togglenpc', 'playersize', 'playercolour', 'help', 'printsettings', 'start', 'quit']
+# slowprint('Here are a list of functions: ', 0.03)
+# print()
+# slowprint('PlaneSize: adjust the size of the plane.', 0.03)
+# print()
+# slowprint('ToggleNPC: Toggle the NPC.', 0.03)
+# print()
+# slowprint('PlayerSize: adjust the size of the players.', 0.03)           this is backup code
+# print()
+# slowprint('PlayerColour: change the player colours.', 0.03)
+# print()
+# slowprint('PrintSettings: prints all current settings.', 0.03)
+# print()
+# slowprint('Help: prints the rules.', 0.03)
+# print()
+# slowprint('Start: starts the game.', 0.03)
+# print()
+slowprint('''Here are a list of functions: 
+PlaneSize: adjust the size of the plane.
+ToggleNPC: Toggle the NPC.
+PlayerSize: adjust the size of the players.
+PlayerColour: change the player colours.
+PrintSettings: prints all current settings.
+Help: prints the rules.
+Start: starts the game.
+''', 0.05)
 while functionloop:
-    function = input('Enter function: ').lower()
+    function = input('Enter function: ')
+    function = function.lower()
     while function not in functionlist:
-        print('This is not a valid function. Please try again. ')
+        slowprint('This is not a valid function. Please try again. ', 0.03)
         function = input('Enter function: ')
+        function = function.lower()
     if function == 'planesize':
         while True:
             try:
                 sizex = int(input('Enter X of Cartesian Plane: '))
             except:
-                print('This is not a valid input. Please input using a natural number. ')
+                slowprint('This is not a valid input. Please input using a natural number. ', 0.085)
             else: 
                 break
         while True:
             try:
                 sizey = int(input('Enter Y of Cartesian Plane: '))
             except:
-                print('This is not a valid input. Please input using a natural number. ')
+                slowprint('This is not a valid input. Please input using a natural number. ', 0.085)
             else: 
                 break
     elif function == 'playercolour':
@@ -218,24 +256,25 @@ while functionloop:
             try:
                 playernum = int(input('Please choose which player: '))
             except:
-                print('Use a single number.')
+                slowprint('Please use a single number.', 0.085)
             else:
                 break
-        print(f'Here is a printout of the colour list: {colours}')
+        slowprint(f'Here is a printout of the colour list: ' + colored('grey', 'grey')+ ', ' + colored('red', 'red') + ', ' + colored('green', 'green') + ', ' + colored('yellow', 'yellow') + ', ' + colored('blue', 'blue') + ', ' + colored('magenta', 'magenta') + ', ' + colored('cyan', 'cyan') + ', ' + colored('white', 'white') + '.', 0.03)
+        print()
         if playernum == 1:
             p1colour = input('Please choose a colour: ').lower()
             while p1colour not in colours:
-                print('Please select a colour from the list above.')
+                slowprint('Please select a colour from the list above.', 0.085)
                 p1colour = input('Please choose a colour: ').lower()
         elif playernum == 2:
             p2colour = input('Please choose a colour: ').lower()
             while p2colour not in colours:
-                print('Please select a colour from the list above.')
+                slowprint('Please select a colour from the list above.', 0.085)
                 p2colour = input('Please choose a colour: ').lower()
         elif playernum == 3:
             npccolour = input('Please choose a colour: ').lower()
             while npccolour not in colours:
-                print('Please select a colour from the list above.')
+                slowprint('Please select a colour from the list above.', 0.085)
                 npccolour = input('Please choose a colour: ').lower()
     elif function == 'start':
         functionloop = False
@@ -244,24 +283,33 @@ while functionloop:
             npctoggle = False
         elif npctoggle == False:
             npctoggle = True
+        slowprint(f'NPC Toggled: {npctoggle}', 0.085)
     elif function == 'help':
-        print('''
+        slowprint('''
+Two players are required to play this game. 
 To win, you must land on the destination or another player.
 You can only use primitive pythagorean triples.
-''')
+''', 0.085)
+    elif function == 'playersize':
+        playersize = input('Please choose a size from 1-10: ')
+        while playersize not in size:
+            playersize = input('Please choose a number from 1-10: ')
+        playersize = int(playersize)
     elif function == 'printsettings':
         print()
-        print(f'NPC Toggled: {npctoggle}')
-        print(colored('Player ONE', p1colour) + f' colour: {p1colour}')
-        print(colored('Player TWO', p2colour) + f' colour: {p2colour}')
-        print(colored('NPC', npccolour) + f' colour: {npccolour}')
+        slowprint(colored('NPC', npccolour) + f' Toggled: {npctoggle}', 0.085)
+        slowprint(colored('Player ONE', p1colour) + f' colour: {p1colour}', 0.085)
+        slowprint(colored('Player TWO', p2colour) + f' colour: {p2colour}', 0.085)
+        slowprint(colored('NPC', npccolour) + f' colour: {npccolour}', 0.085)
+        slowprint(f'Plane Size: {sizex*2} by {sizey*2}', 0.085)
+        slowprint(f'Player Size: {playersize}', 0.085)
         print()
 
 
 p1dict = {
     'Name': 'Player ONE',
-    'X': random.randint(pos_to_neg(sizex),sizex),
-    'Y': random.randint(pos_to_neg(sizey),sizey),
+    'X': random.randint(1,sizex),
+    'Y': random.randint(1,sizey),
     'Pygame Coords': None,
     'Colour': p1colour,
     'Num': 1,
@@ -269,8 +317,8 @@ p1dict = {
 
 p2dict = {
     'Name': 'Player TWO',
-    'X': random.randint(pos_to_neg(sizex),sizex),
-    'Y': random.randint(pos_to_neg(sizey), sizey),
+    'X': random.randint(1,sizex),
+    'Y': random.randint(1, sizey),
     'Pygame Coords': None,
     'Colour': p2colour,
     'Num': 2,
@@ -278,8 +326,8 @@ p2dict = {
 
 destdict = {
     'Name': 'Destination',
-    'X': random.randint(pos_to_neg(sizex), sizex),
-    'Y': random.randint(pos_to_neg(sizey), sizey),
+    'X': random.randint(1, sizex),
+    'Y': random.randint(1, sizey),
     'Pygame Coords': None,
     'Colour': 'black',
     'Num': None,
@@ -287,15 +335,15 @@ destdict = {
 
 npcdict = {
     'Name': 'Destination',
-    'X': random.randint(pos_to_neg(sizex), sizex),
-    'Y': random.randint(pos_to_neg(sizey), sizey),
+    'X': random.randint(1, sizex),
+    'Y': random.randint(1, sizey),
     'Pygame Coords': None,
     'Colour': npccolour,
     'Num': 3,
     'Toggle': npctoggle,
 }
 
-app_surf, app_surf_rect = create_app_window(sizex*2, sizey*2)
+app_surf, app_surf_rect = create_app_window(sizex, sizey)
 
 initialise_entities()
 
@@ -321,7 +369,11 @@ players_mid = remove(players_mid)
 app_surf_update(destdict, p1dict, p2dict)
 #player 1 stats
 printstats(p1dict['Name'], p1dict['X'], p1dict['Y'], 'red')
-print(f'Distance to Destination: {p1_to_destination}')
+import sys
+import time
+
+
+# print(f'Distance to Destination: {p1_to_destination}')
 print(f'Distance to Player 2: {players_distance}')
 print(f'Gradient with Destination: {grad_p1_destination}')
 print(f'Gradient with Player 2: {grad_players}')
@@ -350,6 +402,7 @@ playerturns = 1
 win = False
 direction = ''
 refresh_window()
+print('You must click every time for each move.')
 while win != True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -357,6 +410,7 @@ while win != True:
            sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if playerturns == 1:
+                print()
                 print(colored('Player ONE:', p1dict['Colour']))
                 dist, direction = inputcheck()
                 moveplayer(dist, direction, p1dict)
@@ -366,6 +420,7 @@ while win != True:
                     print('The winner is: ' + colored(p1dict['Name'], p1dict['Colour']))
                 playerturns = 2
             elif playerturns == 2:
+                print()
                 print(colored('Player TWO:', p2dict['Colour']))
                 dist, direction = inputcheck()
                 moveplayer(dist, direction, p2dict)
@@ -374,6 +429,16 @@ while win != True:
                 if win == "Player TWO":
                     print('The winner is: ' + colored(p2dict['Name'], p2dict['Colour']))
                 playerturns = 1
+#             if npctoggle:
+#                 npcmovex = 
+#                 npcmovey = 
+#                 print()
+#                 print(colored('NPC:', npcdict['Colour']))
+#                 print('''Please enter move in format: distance <space> direction.
+# The distance and direction must be natural numbers.
+# The distance must be 5 or larger.
+# The direction must to be from 1-8.''')
+#                 print(f'Enter your move: {npcmovex} {npcmovey}')
            
     app_surf_update(destdict, p1dict, p2dict)
     refresh_window()
