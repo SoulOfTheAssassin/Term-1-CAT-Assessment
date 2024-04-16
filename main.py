@@ -38,6 +38,7 @@ def slowprint(str, speed):
         sys.stdout.flush()
         time.sleep(speed)
     time.sleep(1)
+    print()
     
 # def slowinput(string, speed):
 #     for char in string:
