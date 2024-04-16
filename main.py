@@ -1,7 +1,7 @@
 import random
 import pygame
 import sys
-from termcolor import *
+from termcolor import colored
 from triplesdictionary import triples
 
 pygame.init()
@@ -176,13 +176,15 @@ def inputcheck():
             return distance, direction
 
 
-colours = ['grey', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'bright_grey', 'bright_red', 'bright_green', 'bright_yellow', 'bright_blue', 'bright_magenta', 'bright_cyan', 'bright_white']
+colours = ['grey', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white']
 p1colour = 'red'
 p2colour = 'blue'
-npccolour = 'bright_green'
+npccolour = 'green'
 npctoggle = False
 functionloop = True
-functionlist = ['PlaneSize', 'ToggleNPC', 'PlayerSize', 'PlayerColour', 'Help', 'Print', 'Start']
+sizex = 400
+sizey = 400
+functionlist = ['planesize', 'togglenpc', 'playersize', 'playercolour', 'help', 'printsettings', 'start']
 print('Here are a list of functions: ')
 print('PlaneSize: adjust the size of the plane.')
 print('ToggleNPC: Toggle the NPC.')
@@ -192,11 +194,11 @@ print('PrintSettings: prints all current settings.')
 print('Help: prints the rules.')
 print('Start: starts the game.')
 while functionloop:
-    function = input('Enter function: ')
+    function = input('Enter function: ').lower()
     while function not in functionlist:
         print('This is not a valid function. Please try again. ')
         function = input('Enter function: ')
-    if function == 'PlaneSize':
+    if function == 'planesize':
         while True:
             try:
                 sizex = int(input('Enter X of Cartesian Plane: '))
@@ -211,7 +213,7 @@ while functionloop:
                 print('This is not a valid input. Please input using a natural number. ')
             else: 
                 break
-    elif function == 'PlayerColour':
+    elif function == 'playercolour':
         while True:
             try:
                 playernum = int(input('Please choose which player: '))
@@ -221,29 +223,39 @@ while functionloop:
                 break
         print(f'Here is a printout of the colour list: {colours}')
         if playernum == 1:
-            p1colour = input('Please choose a colour: ')
+            p1colour = input('Please choose a colour: ').lower()
             while p1colour not in colours:
                 print('Please select a colour from the list above.')
-                p1colour = input('Please choose a colour: ')
+                p1colour = input('Please choose a colour: ').lower()
         elif playernum == 2:
-            p2colour = input('Please choose a colour: ')
+            p2colour = input('Please choose a colour: ').lower()
             while p2colour not in colours:
                 print('Please select a colour from the list above.')
-                p2colour = input('Please choose a colour: ')
+                p2colour = input('Please choose a colour: ').lower()
         elif playernum == 3:
-            npccolour = input('Please choose a colour: ')
+            npccolour = input('Please choose a colour: ').lower()
             while npccolour not in colours:
                 print('Please select a colour from the list above.')
-                npccolour = input('Please choose a colour: ')
-    elif function == 'Start':
+                npccolour = input('Please choose a colour: ').lower()
+    elif function == 'start':
         functionloop = False
-    elif function == 'ToggleNPC':
+    elif function == 'togglenpc':
         if npctoggle == True:
             npctoggle = False
         elif npctoggle == False:
             npctoggle = True
-    elif function == 'Help':
-        print('''To win, you must land on the destination or another player.''')
+    elif function == 'help':
+        print('''
+To win, you must land on the destination or another player.
+You can only use primitive pythagorean triples.
+''')
+    elif function == 'printsettings':
+        print()
+        print(f'NPC Toggled: {npctoggle}')
+        print(colored('Player ONE', p1colour) + f' colour: {p1colour}')
+        print(colored('Player TWO', p2colour) + f' colour: {p2colour}')
+        print(colored('NPC', npccolour) + f' colour: {npccolour}')
+        print()
 
 
 p1dict = {
@@ -365,3 +377,4 @@ while win != True:
            
     app_surf_update(destdict, p1dict, p2dict)
     refresh_window()
+    

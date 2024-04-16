@@ -1,5 +1,5 @@
 triples = [ #last number is the actual distance
-[3, 4, 6], # oli you wont see dis
+[3, 4, 6], 
 [5, 12, 13],
 [8, 15, 17],
 [7, 24, 25],
