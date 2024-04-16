@@ -1,15 +1,15 @@
 import random
 import pygame
 import sys
-from termcolor import colored
+from termcolor import *
 from triplesdictionary import triples
 
 pygame.init()
 app_clock = pygame.time.Clock()
 
 
-def remove(string):
-    var = str(string)
+def remove(list):
+    var = str(list)
     var = var.replace('[', '')
     var = var.replace(']', '')
     return var
@@ -21,9 +21,9 @@ def hypotenuse(x, y):
     e = e ** 0.5
     return int(e)
 
-def distance(p1x, p1y, dx, dy):  #
-    xdistance = dx - p1x                                               
-    ydistance = dy - p1y                                                 
+def distance(px, py, dx, dy):  #
+    xdistance = dx - px                                               
+    ydistance = dy - py                                                 
     p1_distance = hypotenuse(xdistance, ydistance)                 
     distance = round(p1_distance, 1)
     return distance
@@ -46,7 +46,10 @@ def midpoint(x1, y1, x2, y2):
     return [x, y]
 
 def gradient(x1, y1, x2, y2):
-    var = (y2 - y1)/(x2 - x1)
+    try:
+        var = (y2 - y1)/(x2 - x1)
+    except ZeroDivisionError:
+        return "Undefined"
     var = round(var, 1)
     return var
 
@@ -54,10 +57,9 @@ def printstats(name, x, y, colour):
     print(colored(f'{name}', colour) + ' Information')
     print(colored(f'{name}', colour) + f' Coordinates: {x}, {y}')
 
-
 def create_app_window(width, height):
     print(f'\nWelcome. The plane goes from -{width/2} to {width/2} in both the x and y directions')
-    pygame.display.set_caption("<App Name> TBD")           
+    pygame.display.set_caption("Gam ov Gradiante")           
     app_dimensions = (width + 10, height + 10)
     app_surf = pygame.display.set_mode(app_dimensions)
     app_surf_rect = app_surf.get_rect()
@@ -92,21 +94,165 @@ def initialise_entities():
     p2dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p2dict['X'], p2dict['Y'])
     destdict['Pygame Coords'] = conv_cartesian_to_pygame_coords(destdict['X'], destdict['Y'])
 
+def moveplayer(distance, direction, dictionary):
+    iffound = False
+    while iffound == False:
+        for triple in triples:
+            if triple[2] == distance:
+                a = triple[0]
+                b = triple[1]
+                iffound = True
+                break
+        if iffound == False:
+            distance = distance - 1
+    if direction == 1:
+        dictionary['X'] += b
+        dictionary['Y'] += a
+    elif direction == 2:
+        dictionary['X'] += a
+        dictionary['Y'] += b
+    elif direction == 3:
+        dictionary['X'] -= a
+        dictionary['Y'] += b
+    elif direction == 4:
+        dictionary['X'] -= b
+        dictionary['Y'] += a
+    elif direction == 5:
+        dictionary['X'] -= b
+        dictionary['Y'] -= a
+    elif direction == 6:
+        dictionary['X'] -= a
+        dictionary['Y'] -= b
+    elif direction == 7:
+        dictionary['X'] += a
+        dictionary['Y'] -= b
+    elif direction == 8:
+        dictionary['X'] += b
+        dictionary['Y'] -= a
+
+def checkwin(dictionary1, dictionary2, dictionary3, lastmove):
+     if dictionary1['X'] == dictionary2['X'] and dictionary1['Y'] == dictionary2['Y']:
+         win = True
+     elif dictionary1['X'] == dictionary3['X'] and dictionary1['Y'] == dictionary3['Y']:
+         win = True
+     elif dictionary3['X'] == dictionary2['X'] and dictionary3['Y'] == dictionary2['Y']:
+         win = True
+     else: 
+         return False
+     if win: 
+         if lastmove == 1:
+             return "Player ONE"
+         elif lastmove == 2:
+             return "Player TWO"
+         elif lastmove == 3:
+             return "NPC"
+
+def inputcheck():
+    print('Please enter move in format: distance <space> direction.') 
+    print('The distance and direction must be natural numbers.') 
+    print("The distance must be 5 or larger.")  
+    print("The direction must to be from 1-8.") 
+    while True: 
+        move = input("Enter your move: ").strip() 
+        try: 
+            move=move.split(" ") # To get the distance and direction
+        except:
+            print("Please enter in format: distance <space> direction. ")
+            continue
+        try:
+            distance=int(move[0])
+            direction=int(move[1])
+        except:
+            print("The distance and direction need to be natural numbers.")
+            continue
+        if direction > 8 or direction < 1:
+            print("The direction has to be 1-8.")
+        elif distance < 0:
+            print("The distance cannot be negative.")
+        elif distance < 5:
+            print("The distance must be 5 or larger. ")
+        else:
+            print("Move was successful.")
+            return distance, direction
 
 
+colours = ['grey', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'bright_grey', 'bright_red', 'bright_green', 'bright_yellow', 'bright_blue', 'bright_magenta', 'bright_cyan', 'bright_white']
+p1colour = 'red'
+p2colour = 'blue'
+npccolour = 'bright_green'
+npctoggle = False
+functionloop = True
+functionlist = ['PlaneSize', 'ToggleNPC', 'PlayerSize', 'PlayerColour', 'Help', 'Print', 'Start']
+print('Here are a list of functions: ')
+print('PlaneSize: adjust the size of the plane.')
+print('ToggleNPC: Toggle the NPC.')
+print('PlayerSize: adjust the size of the players.')
+print('PlayerColour: change the player colours.')
+print('PrintSettings: prints all current settings.')
+print('Help: prints the rules.')
+print('Start: starts the game.')
+while functionloop:
+    function = input('Enter function: ')
+    while function not in functionlist:
+        print('This is not a valid function. Please try again. ')
+        function = input('Enter function: ')
+    if function == 'PlaneSize':
+        while True:
+            try:
+                sizex = int(input('Enter X of Cartesian Plane: '))
+            except:
+                print('This is not a valid input. Please input using a natural number. ')
+            else: 
+                break
+        while True:
+            try:
+                sizey = int(input('Enter Y of Cartesian Plane: '))
+            except:
+                print('This is not a valid input. Please input using a natural number. ')
+            else: 
+                break
+    elif function == 'PlayerColour':
+        while True:
+            try:
+                playernum = int(input('Please choose which player: '))
+            except:
+                print('Use a single number.')
+            else:
+                break
+        print(f'Here is a printout of the colour list: {colours}')
+        if playernum == 1:
+            p1colour = input('Please choose a colour: ')
+            while p1colour not in colours:
+                print('Please select a colour from the list above.')
+                p1colour = input('Please choose a colour: ')
+        elif playernum == 2:
+            p2colour = input('Please choose a colour: ')
+            while p2colour not in colours:
+                print('Please select a colour from the list above.')
+                p2colour = input('Please choose a colour: ')
+        elif playernum == 3:
+            npccolour = input('Please choose a colour: ')
+            while npccolour not in colours:
+                print('Please select a colour from the list above.')
+                npccolour = input('Please choose a colour: ')
+    elif function == 'Start':
+        functionloop = False
+    elif function == 'ToggleNPC':
+        if npctoggle == True:
+            npctoggle = False
+        elif npctoggle == False:
+            npctoggle = True
+    elif function == 'Help':
+        print('''To win, you must land on the destination or another player.''')
 
-sizex = int(input('What size plane do you want (x)? '))
-sizey = int(input('What size plane do you want (y)? '))
-
-#this is the code to find the midpoint between player 1 and destination
-# 1: x difference  2: x midpoint  3: y difference  4: y midpoint  5: actual distance  6: distance to midpoint
 
 p1dict = {
     'Name': 'Player ONE',
     'X': random.randint(pos_to_neg(sizex),sizex),
     'Y': random.randint(pos_to_neg(sizey),sizey),
     'Pygame Coords': None,
-    'Colour': 'red',
+    'Colour': p1colour,
+    'Num': 1,
 }
 
 p2dict = {
@@ -114,7 +260,8 @@ p2dict = {
     'X': random.randint(pos_to_neg(sizex),sizex),
     'Y': random.randint(pos_to_neg(sizey), sizey),
     'Pygame Coords': None,
-    'Colour': 'blue',
+    'Colour': p2colour,
+    'Num': 2,
 }
 
 destdict = {
@@ -123,22 +270,22 @@ destdict = {
     'Y': random.randint(pos_to_neg(sizey), sizey),
     'Pygame Coords': None,
     'Colour': 'black',
+    'Num': None,
+}
+
+npcdict = {
+    'Name': 'Destination',
+    'X': random.randint(pos_to_neg(sizex), sizex),
+    'Y': random.randint(pos_to_neg(sizey), sizey),
+    'Pygame Coords': None,
+    'Colour': npccolour,
+    'Num': 3,
+    'Toggle': npctoggle,
 }
 
 app_surf, app_surf_rect = create_app_window(sizex*2, sizey*2)
 
 initialise_entities()
-
-angles = { #angels of directions
-   1: (0, 45),
-   2: (45, 90),
-   3: (90, 135),
-   4: (135, 180),
-   5: (180, 225),
-   6: (225, 270),
-   7: (270, 315),
-   8: (315, 360)
-}
 
 directions = [1,2,3,4,5,6,7,8]
  # math
@@ -187,33 +334,34 @@ print(f'Gradient with Player 2: {grad_p2_destination}')
 print(f'Midpoint Coords with Player 1: {mid_p1_destination}')
 print(f'Midpoint Coords with Player 2: {mid_p2_destination}')
 print('\n')
-turns = 1
+playerturns = 1
 win = False
 direction = ''
 refresh_window()
-while win != True:                             # The gameplay happens in here. Infinite loop until the user quits or a player wins"
-   for event in pygame.event.get():    # scan through all 'events' happening to the window such as mouse clicks and key presses
-       if event.type == pygame.QUIT:   # must have this else the user can't quit!
+while win != True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
            pygame.quit()
            sys.exit()
-       if turns == 1:     # if the left button was pressed, ask for player 1 new coordinates (for you, you must ask for distance and direction!)
-           print(colored('Player ONE:', p1dict['Colour']))
-           while True:
-                try:
-                    dist, direction = int(input('Please enter the distance and direction you wish to travel in the format <distance>, <direction>: ')).split(',')
-                except ValueError:
-                    print('Please use integers in the format <distance>, <direction>.')
-                else:
-                    break
-           turns = 2
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if playerturns == 1:
+                print(colored('Player ONE:', p1dict['Colour']))
+                dist, direction = inputcheck()
+                moveplayer(dist, direction, p1dict)
+                p1dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p1dict['X'], p1dict['Y'])
+                win = checkwin(p1dict, p2dict, destdict, p1dict['Num'])
+                if win == "Player ONE":
+                    print('The winner is: ' + colored(p1dict['Name'], p1dict['Colour']))
+                playerturns = 2
+            elif playerturns == 2:
+                print(colored('Player TWO:', p2dict['Colour']))
+                dist, direction = inputcheck()
+                moveplayer(dist, direction, p2dict)
+                p2dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p2dict['X'], p2dict['Y'])
+                win = checkwin(p1dict, p2dict, destdict, p2dict['Num'])
+                if win == "Player TWO":
+                    print('The winner is: ' + colored(p2dict['Name'], p2dict['Colour']))
+                playerturns = 1
            
-       elif turns == 2:    # if the right buttom was pressed, as for player two's request (you must has for distance and direction)
-           dist, direction = input("Enter new coordinates for Player TWO: e.g. 60, -155: ").split(",") # You need to ask for distance and direction
-           dist = int(dist)
-           p2dict['Cartesian Coords'] = (dist, direction)
-           p2dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(dist, direction)
-           turns = 1
-               # If you plan to use some or all of my code in your investigation, email me with the subject line of you want to name the game. Be creative :)
-           
-   app_surf_update(destdict, p1dict, p2dict)    # call the function to update the app surface with the new coordinates. Send it the entities
-   refresh_window()            # now refresh the window so that our changes are visible. Loop back to while True.
+    app_surf_update(destdict, p1dict, p2dict)
+    refresh_window()
