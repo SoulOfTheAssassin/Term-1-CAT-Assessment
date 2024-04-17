@@ -228,14 +228,13 @@ PlayerSize: adjust the size of the players.
 PlayerColour: change the player colours.
 PrintSettings: prints all current settings.
 Help: prints the rules.
-Start: starts the game.
-''', 0.05)
+Start: starts the game.''', 0.05)
 while functionloop:
-    function = input('Enter function: ')
+    function = slowinput('Enter function: ', 0.085)
     function = function.lower()
     while function not in functionlist:
-        slowprint('This is not a valid function. Please try again. ', 0.03)
-        function = input('Enter function: ')
+        slowprint('This is not a valid function. Please try again. ', 0.085)
+        function = slowinput('Enter function: ', 0.085)
         function = function.lower()
     if function == 'planesize':
         while True:
