@@ -40,13 +40,13 @@ def slowprint(str, speed):
     time.sleep(1)
     print()
     
-# def slowinput(string, speed):
-#     for char in string:
-#         input = print(char, end='')
-#         sys.stdout.flush()
-#         time.sleep(speed)
-#     time.sleep(1)
-#     return str(input)
+def slowinput(str, speed):
+    for char in str:
+        print(char, end='')
+        sys.stdout.flush()
+        time.sleep(speed)
+    c = input()
+    return c
 
 def difference(x1, x2):
     if x1 < x2:
@@ -71,8 +71,8 @@ def gradient(x1, y1, x2, y2):
     return var
 
 def printstats(name, x, y, colour):
-    print(colored(f'{name}', colour) + ' Information')
-    print(colored(f'{name}', colour) + f' Coordinates: {x}, {y}')
+    slowprint(colored(f'{name}', colour) + ' Information', 0.085)
+    slowprint(colored(f'{name}', colour) + f' Coordinates: {x}, {y}', 0.085)
 
 def create_app_window(width, height):
     print(f'\nWelcome. The plane goes from -{width/2} to {width/2} in both the x and y directions')
@@ -298,10 +298,10 @@ You can only use primitive pythagorean triples.
         playersize = int(playersize)
     elif function == 'printsettings':
         print()
-        slowprint(colored('NPC', npccolour) + f' Toggled: {npctoggle}', 0.085)
-        slowprint(colored('Player ONE', p1colour) + f' colour: {p1colour}', 0.085)
-        slowprint(colored('Player TWO', p2colour) + f' colour: {p2colour}', 0.085)
-        slowprint(colored('NPC', npccolour) + f' colour: {npccolour}', 0.085)
+        slowprint(colored('NPC', str(npccolour)) + f' Toggled: {npctoggle}', 0.085)
+        slowprint(colored('Player ONE', str(p1colour)) + f' colour: {p1colour}', 0.085)
+        slowprint(colored('Player TWO', str(p2colour)) + f' colour: {p2colour}', 0.085)
+        slowprint(colored('NPC', str(npccolour)) + f' colour: {npccolour}', 0.085)
         slowprint(f'Plane Size: {sizex*2} by {sizey*2}', 0.085)
         slowprint(f'Player Size: {playersize}', 0.085)
         print()
@@ -353,43 +353,83 @@ directions = [1,2,3,4,5,6,7,8]
 p1_to_destination = distance(p1dict['X'], p1dict['Y'], destdict['X'], destdict['Y'])
 p2_to_destination = distance(p2dict['X'], p2dict['Y'], destdict['X'], destdict['Y'])
 players_distance = distance(p1dict['X'], p1dict['Y'], p2dict['X'], p2dict['Y'])
+npc_to_destination = distance(destdict['X'], destdict['Y'], npcdict['X'], npcdict['Y'])
+npc_to_p1 = distance(p1dict['X'], p1dict['Y'], npcdict['X'], npcdict['Y'])
+npc_to_p2 = distance(p2dict['X'], p2dict['Y'], npcdict['X'], npcdict['Y'])
 
 grad_p1_destination = gradient(p1dict['X'], p1dict['Y'], destdict['X'], destdict['Y'])
 grad_p2_destination = gradient(p2dict['X'], p2dict['Y'], destdict['X'], destdict['Y'])
 grad_players = gradient(p1dict['X'], p1dict['Y'], p2dict['X'], p2dict['Y'])
+npc_grad_destination = gradient(destdict['X'], destdict['Y'], npcdict['X'], npcdict['Y'])
+npc_grad_p1 = gradient(p1dict['X'], p1dict['Y'], npcdict['X'], npcdict['Y'])
+npc_grad_p2 = gradient(p2dict['X'], p2dict['Y'], npcdict['X'], npcdict['Y'])
 
 mid_p1_destination = midpoint(p1dict['X'], p1dict['Y'], destdict['X'], destdict['Y'])
 mid_p2_destination = midpoint(p2dict['X'], p2dict['Y'], destdict['X'], destdict['Y'])
 players_mid = midpoint(p1dict['X'], p1dict['Y'], p2dict['X'], p2dict['Y'])
+npc_destination_mid = midpoint(destdict['X'], destdict['Y'], npcdict['X'], npcdict['Y'])
+npc_p1_mid = midpoint(p1dict['X'], p1dict['Y'], npcdict['X'], npcdict['Y'])
+npc_p2_mid = midpoint(p2dict['X'], p2dict['Y'], npcdict['X'], npcdict['Y'])
 
 mid_p2_destination = remove(mid_p2_destination)
 mid_p1_destination = remove(mid_p1_destination)
 players_mid = remove(players_mid)
+npc_destination_mid = remove(npc_destination_mid)
+npc_p1_mid = remove(npc_p1_mid)
+npc_p2_mid = remove(npc_p2_mid)
 
 
 app_surf_update(destdict, p1dict, p2dict)
 #player 1 stats
 printstats(p1dict['Name'], p1dict['X'], p1dict['Y'], 'red')
-import sys
-import time
-
 
 # print(f'Distance to Destination: {p1_to_destination}')
-print(f'Distance to Player 2: {players_distance}')
-print(f'Gradient with Destination: {grad_p1_destination}')
-print(f'Gradient with Player 2: {grad_players}')
-print(f'Midpoint Coords with Destination: {mid_p1_destination}')
-print(f'Midpoint Coords with Player 2: {players_mid}')
-print('\n')
+# print(f'Midpoint Coords with Destination: {mid_p1_destination}')
+# print(f'Gradient with Destination: {grad_p1_destination}')
+# print(f'Distance to Player 2: {players_distance}')
+# print(f'Midpoint Coords with Player 2: {players_mid}')
+# print(f'Gradient with Player 2: {grad_players}')
+
+slowprint(f'''Distance to Destination: {p1_to_destination}
+Midpoint Coords with Destination: {mid_p1_destination}
+Gradient with Destination: {grad_p1_destination}
+Distance to Player 2: {players_distance}
+Midpoint Coords with Player 2: {players_mid}
+Gradient with Player 2: {grad_players}
+''', 0.05)
+
+if npctoggle:
+    slowprint(f'''Distance to NPC: {npc_to_p1}
+Midpoint with NPC: {npc_p1_mid}
+Gradient with NPC: {npc_grad_p1}
+''', 0.05)
+print()
+
 #player 2 stats
 printstats(p2dict['Name'], p2dict['X'], p2dict['Y'], p2dict['Colour'])
-print(f'Distance to Destination: {p2_to_destination}')
-print(f'Distance to Player 2: {players_distance}')
-print(f'Gradient with Destination: {grad_p2_destination}')
-print(f'Gradient with Player 2: {grad_players}')
-print(f'Midpoint Coords with Destination: {mid_p2_destination}')
-print(f'Midpoint Coords with Player 2: {players_mid}')
-print('\n')
+
+
+slowprint(f'''Distance to Destination: {p2_to_destination}
+Midpoint Coords with Destination: {mid_p2_destination}
+Gradient with Destination: {grad_p2_destination}
+Distance to Player ONE: {players_distance}
+Midpoint Coords with Player ONE: {players_mid}
+Gradient with Player ONE: {grad_players}
+''', 0.03)
+
+if npctoggle:
+    slowprint()
+
+
+# print(f'Distance to Destination: {p2_to_destination}')
+# print(f'Distance to Player 2: {players_distance}')
+# print(f'Gradient with Destination: {grad_p2_destination}')
+# print(f'Gradient with Player ONE: {grad_players}')
+# print(f'Midpoint Coords with Player ONE: {mid_p2_destination}')
+# print(f'Midpoint Coords with Player ONE: {players_mid}')
+# print('\n')
+
+
 #destination stats
 printstats(destdict['Name'], destdict['X'], destdict['Y'], 'grey')
 print(f'Distance to Player 1: {p1_to_destination}')
