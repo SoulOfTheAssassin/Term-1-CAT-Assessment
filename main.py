@@ -29,6 +29,26 @@ def distance(px, py, dx, dy):  #
     distance = round(p1_distance, 1)
     return distance
 
+def npc_move(distance:float, gradient:float, npc_x, destination_x) -> str: # calculates the move for the npc and returns str in the format distance<space>direction.
+# actual movement (direction)
+    try:
+        if gradient >= 0:
+            if gradient >= 1:
+                direction = "2" if npc_x < destination_x else "6"
+            else:
+                direction = "1" if npc_x < destination_x else "5"
+        else:
+        if gradient <= -1:
+            direction = "7" if npc_x < destination_x else "3"
+        else:
+            direction = "8" if npc_x < destination_x else "4"
+    except:
+        direction = "3"
+    distance = round(distance)
+    if distance > size * 2:
+        distance = size * 2
+    return str(distance) + " " + direction
+
 def pos_to_neg(x):
     return 0-x
 
@@ -200,9 +220,8 @@ p2colour = 'blue'
 npccolour = 'green'
 npctoggle = False
 functionloop = True
-sizex = 800
-sizey = 800
-size = [1,2,3,4,5,6,7,8,9,10]
+size = 800
+sizes = [1,2,3,4,5,6,7,8,9,10]
 playersize = 5.0
 functionlist = ['planesize', 'togglenpc', 'playersize', 'playercolour', 'help', 'printsettings', 'start', 'quit']
 # slowprint('Here are a list of functions: ', 0.03)
@@ -239,14 +258,7 @@ while functionloop:
     if function == 'planesize':
         while True:
             try:
-                sizex = int(input('Enter X of Cartesian Plane: '))
-            except:
-                slowprint('This is not a valid input. Please input using a natural number. ', 0.085)
-            else: 
-                break
-        while True:
-            try:
-                sizey = int(input('Enter Y of Cartesian Plane: '))
+                size = int(input('Enter Y of Cartesian Plane: '))
             except:
                 slowprint('This is not a valid input. Please input using a natural number. ', 0.085)
             else: 
@@ -292,7 +304,7 @@ You can only use primitive pythagorean triples.
 ''', 0.085)
     elif function == 'playersize':
         playersize = input('Please choose a size from 1-10: ')
-        while playersize not in size:
+        while playersize not in sizes:
             playersize = input('Please choose a number from 1-10: ')
         playersize = int(playersize)
     elif function == 'printsettings':
@@ -308,8 +320,8 @@ You can only use primitive pythagorean triples.
 
 p1dict = {
     'Name': 'Player ONE',
-    'X': random.randint(1,sizex),
-    'Y': random.randint(1,sizey),
+    'X': random.randint(1,size),
+    'Y': random.randint(1,size),
     'Pygame Coords': None,
     'Colour': p1colour,
     'Num': 1,
@@ -317,8 +329,8 @@ p1dict = {
 
 p2dict = {
     'Name': 'Player TWO',
-    'X': random.randint(1,sizex),
-    'Y': random.randint(1, sizey),
+    'X': random.randint(1,size),
+    'Y': random.randint(1, size),
     'Pygame Coords': None,
     'Colour': p2colour,
     'Num': 2,
@@ -326,8 +338,8 @@ p2dict = {
 
 destdict = {
     'Name': 'Destination',
-    'X': random.randint(1, sizex),
-    'Y': random.randint(1, sizey),
+    'X': random.randint(1, size),
+    'Y': random.randint(1, size),
     'Pygame Coords': None,
     'Colour': 'black',
     'Num': None,
@@ -335,8 +347,8 @@ destdict = {
 
 npcdict = {
     'Name': 'Destination',
-    'X': random.randint(1, sizex),
-    'Y': random.randint(1, sizey),
+    'X': random.randint(1, size),
+    'Y': random.randint(1, size),
     'Pygame Coords': None,
     'Colour': npccolour,
     'Num': 3,
@@ -451,7 +463,7 @@ while win != True:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if playerturns == 1:
                 print()
-                print(colored('Player ONE:', p1dict['Colour']))
+                slowprint(colored('Player ONE:', p1dict['Colour']), 0.085)
                 dist, direction = inputcheck()
                 moveplayer(dist, direction, p1dict)
                 p1dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p1dict['X'], p1dict['Y'])
@@ -467,18 +479,24 @@ while win != True:
                 p2dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p2dict['X'], p2dict['Y'])
                 win = checkwin(p1dict, p2dict, destdict, p2dict['Num'])
                 if win == "Player TWO":
-                    print('The winner is: ' + colored(p2dict['Name'], p2dict['Colour']))
+                    slowprint('The winner is: ' + colored(p2dict['Name'], p2dict['Colour']), 0.085)
                 playerturns = 1
-#             if npctoggle:
-#                 npcmovex = 
-#                 npcmovey = 
-#                 print()
-#                 print(colored('NPC:', npcdict['Colour']))
-#                 print('''Please enter move in format: distance <space> direction.
-# The distance and direction must be natural numbers.
-# The distance must be 5 or larger.
-# The direction must to be from 1-8.''')
-#                 print(f'Enter your move: {npcmovex} {npcmovey}')
+            if npctoggle:
+                slowprint(colored('NPC:', npcdict['Colour']), 0.085)
+                slowprint('''Please enter move in format: distance <space> direction.
+The distance and direction must be natural numbers.
+The distance must be 5 or larger.
+The direction must to be from 1-8.''', 0.03)
+                npcdistance, npcdirection = npc_move(npc_to_destination, npc_grad_destination, npcdict['X'], destdict['X'])
+                for char in f'Enter your move: ':
+                    print(char, end='')
+                    sys.stdout.flush()
+                    time.sleep(0.06)
+                time.sleep(1)
+                slowprint(npcdistance + npcdirection, 0.085)
+                # win = checkwin()
+                
+                
            
     app_surf_update(destdict, p1dict, p2dict)
     refresh_window()
