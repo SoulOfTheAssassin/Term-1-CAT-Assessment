@@ -432,7 +432,7 @@ if print == 'y':
     Distance to Player TWO: {players_distance}
     Midpoint Coords with Player TWO: {players_mid}
     Gradient with Player TWO: {grad_players}
-    ''', 0.05)
+    ''', 0.03)
 
     #player 2 stats
     printstats(p2dict['Name'], p2dict['X'], p2dict['Y'], p2dict['Colour'])
@@ -442,7 +442,7 @@ if print == 'y':
     Distance to Player ONE: {players_distance}
     Midpoint Coords with Player ONE: {players_mid}
     Gradient with Player ONE: {grad_players}
-    ''', 0.06)
+    ''', 0.03)
 
     if npctoggle:
         printstats(npcdict['Name'], npcdict['X'], npcdict['Y'], npcdict['Colour'])
@@ -455,7 +455,7 @@ if print == 'y':
     Distance to Player TWO: {npc_to_p2}
     Midpoint Coords with Player TWO: {npc_p2_mid}
     Gradient with Player TWO: {npc_grad_p2}
-    ''', 0.06)
+    ''', 0.03)
 
 
     # print(f'Distance to Destination: {p2_to_destination}')
@@ -469,12 +469,12 @@ if print == 'y':
 
     #destination stats
     printstats(destdict['Name'], destdict['X'], destdict['Y'], 'grey')
-    slowprint(f'Distance to Player ONE: {p1_to_destination}', 0.06)
-    slowprint(f'Distance to Player TWO: {p2_to_destination}', 0.06)
-    slowprint(f'Gradient with Player ONE: {grad_p1_destination}', 0.06)
-    slowprint(f'Gradient with Player TWO: {grad_p2_destination}', 0.06)
-    slowprint(f'Midpoint Coords with Player ONE: {mid_p1_destination}', 0.06)
-    slowprint(f'Midpoint Coords with Player TWO: {mid_p2_destination}', 0.06)
+    slowprint(f'Distance to Player ONE: {p1_to_destination}', 0.03)
+    slowprint(f'Distance to Player TWO: {p2_to_destination}', 0.03)
+    slowprint(f'Gradient with Player ONE: {grad_p1_destination}', 0.03)
+    slowprint(f'Gradient with Player TWO: {grad_p2_destination}', 0.03)
+    slowprint(f'Midpoint Coords with Player ONE: {mid_p1_destination}', 0.03)
+    slowprint(f'Midpoint Coords with Player TWO: {mid_p2_destination}', 0.03)
     ('\n')
     
     
