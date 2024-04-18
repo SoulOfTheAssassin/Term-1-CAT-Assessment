@@ -1,13 +1,3 @@
-import time
-import sys
+from playsound import playsound
 
-def slowinput(str, speed):
-    for char in str:
-        print(char, end='')
-        sys.stdout.flush()
-        time.sleep(speed)
-    c = input()
-    return c
-
-slowinput("Please enter a number: ", 0.08)
-    
+playsound('/"C:\Users\olive.OLIVER_LIU.000\OneDrive\Desktop\School\2024 Year 8\Maths\Term 1 CAT Assessment\Song1.wav"/Song1.wav')

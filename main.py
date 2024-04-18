@@ -38,10 +38,10 @@ def npc_move(distance:float, gradient:float, npc_x, destination_x) -> str: # cal
             else:
                 direction = "1" if npc_x < destination_x else "5"
         else:
-        if gradient <= -1:
-            direction = "7" if npc_x < destination_x else "3"
-        else:
-            direction = "8" if npc_x < destination_x else "4"
+            if gradient <= -1:
+                direction = "7" if npc_x < destination_x else "3"
+            else:
+                direction = "8" if npc_x < destination_x else "4"
     except:
         direction = "3"
     distance = round(distance)
@@ -95,7 +95,7 @@ def printstats(name, x, y, colour):
     slowprint(colored(f'{name}', colour) + f' Coordinates: {x}, {y}', 0.085)
 
 def create_app_window(width, height):
-    print(f'\nWelcome. The plane goes from -{width/2} to {width/2} in both the x and y directions')
+    slowprint(f'\nWelcome. The plane goes from -{width/2} to {width/2} in both the x and y directions', 0.085)
     pygame.display.set_caption("Gam ov Gradiante")           
     app_dimensions = (width + 10, height + 10)
     app_surf = pygame.display.set_mode(app_dimensions)
@@ -190,7 +190,7 @@ def inputcheck():
     slowprint("The distance must be 5 or larger.", 0.085)  
     slowprint("The direction must to be from 1-8.", 0.085) 
     while True: 
-        move = input("Enter your move: ")
+        move = slowinput("Enter your move: ", 0.085)
         move = move.strip()
         try: 
             move=move.split(" ") # To get the distance and direction
@@ -247,7 +247,7 @@ PlayerSize: adjust the size of the players.
 PlayerColour: change the player colours.
 PrintSettings: prints all current settings.
 Help: prints the rules.
-Start: starts the game.''', 0.05)
+Start: starts the game.''', 0.04)
 while functionloop:
     function = slowinput('Enter function: ', 0.085)
     function = function.lower()
@@ -258,7 +258,7 @@ while functionloop:
     if function == 'planesize':
         while True:
             try:
-                size = int(input('Enter Y of Cartesian Plane: '))
+                size = int(slowinput('Enter Y of Cartesian Plane: ', 0.085))
             except:
                 slowprint('This is not a valid input. Please input using a natural number. ', 0.085)
             else: 
@@ -266,7 +266,7 @@ while functionloop:
     elif function == 'playercolour':
         while True:
             try:
-                playernum = int(input('Please choose which player: '))
+                playernum = int(slowinput('Please choose which player: ', 0.085))
             except:
                 slowprint('Please use a single number.', 0.085)
             else:
@@ -274,20 +274,20 @@ while functionloop:
         slowprint(f'Here is a printout of the colour list: ' + colored('grey', 'grey')+ ', ' + colored('red', 'red') + ', ' + colored('green', 'green') + ', ' + colored('yellow', 'yellow') + ', ' + colored('blue', 'blue') + ', ' + colored('magenta', 'magenta') + ', ' + colored('cyan', 'cyan') + ', ' + colored('white', 'white') + '.', 0.03)
         print()
         if playernum == 1:
-            p1colour = input('Please choose a colour: ').lower()
+            p1colour = slowinput('Please choose a colour: ', 0.085).lower()
             while p1colour not in colours:
                 slowprint('Please select a colour from the list above.', 0.085)
-                p1colour = input('Please choose a colour: ').lower()
+                p1colour = slowinput('Please choose a colour: ', 0.085).lower()
         elif playernum == 2:
-            p2colour = input('Please choose a colour: ').lower()
+            p2colour = slowinput('Please choose a colour: ', 0.085).lower()
             while p2colour not in colours:
                 slowprint('Please select a colour from the list above.', 0.085)
-                p2colour = input('Please choose a colour: ').lower()
+                p2colour = slowinput('Please choose a colour: ', 0.085).lower()
         elif playernum == 3:
-            npccolour = input('Please choose a colour: ').lower()
+            npccolour = slowinput('Please choose a colour: ', 0.085).lower()
             while npccolour not in colours:
                 slowprint('Please select a colour from the list above.', 0.085)
-                npccolour = input('Please choose a colour: ').lower()
+                npccolour = slowinput('Please choose a colour: ', 0.085).lower()
     elif function == 'start':
         functionloop = False
     elif function == 'togglenpc':
@@ -303,9 +303,9 @@ To win, you must land on the destination or another player.
 You can only use primitive pythagorean triples.
 ''', 0.085)
     elif function == 'playersize':
-        playersize = input('Please choose a size from 1-10: ')
+        playersize = slowinput('Please choose a size from 1-10: ', 0.085)
         while playersize not in sizes:
-            playersize = input('Please choose a number from 1-10: ')
+            playersize = slowinput('Please choose a number from 1-10: ', 0.085)
         playersize = int(playersize)
     elif function == 'printsettings':
         print()
@@ -313,7 +313,7 @@ You can only use primitive pythagorean triples.
         slowprint(colored('Player ONE', str(p1colour)) + f' colour: {p1colour}', 0.085)
         slowprint(colored('Player TWO', str(p2colour)) + f' colour: {p2colour}', 0.085)
         slowprint(colored('NPC', str(npccolour)) + f' colour: {npccolour}', 0.085)
-        slowprint(f'Plane Size: {sizex*2} by {sizey*2}', 0.085)
+        slowprint(f'Plane Size: {size*2} by {size*2}', 0.085)
         slowprint(f'Player Size: {playersize}', 0.085)
         print()
 
@@ -404,32 +404,33 @@ printstats(p1dict['Name'], p1dict['X'], p1dict['Y'], 'red')
 slowprint(f'''Distance to Destination: {p1_to_destination}
 Midpoint Coords with Destination: {mid_p1_destination}
 Gradient with Destination: {grad_p1_destination}
-Distance to Player 2: {players_distance}
-Midpoint Coords with Player 2: {players_mid}
-Gradient with Player 2: {grad_players}
+Distance to Player TWO: {players_distance}
+Midpoint Coords with Player TWO: {players_mid}
+Gradient with Player TWO: {grad_players}
 ''', 0.05)
-
-if npctoggle:
-    slowprint(f'''Distance to NPC: {npc_to_p1}
-Midpoint with NPC: {npc_p1_mid}
-Gradient with NPC: {npc_grad_p1}
-''', 0.05)
-print()
 
 #player 2 stats
 printstats(p2dict['Name'], p2dict['X'], p2dict['Y'], p2dict['Colour'])
-
-
 slowprint(f'''Distance to Destination: {p2_to_destination}
 Midpoint Coords with Destination: {mid_p2_destination}
 Gradient with Destination: {grad_p2_destination}
 Distance to Player ONE: {players_distance}
 Midpoint Coords with Player ONE: {players_mid}
 Gradient with Player ONE: {grad_players}
-''', 0.03)
+''', 0.06)
 
 if npctoggle:
-    slowprint()
+    printstats(npcdict['Name'], npcdict['X'], npcdict['Y'], npcdict['Colour'])
+    slowprint(f'''Distance to Destination: {npc_to_destination}
+Midpoint Coords with Destination: {npc_destination_mid}
+Gradient with Destination: {npc_grad_destination}
+Distance to Player ONE: {npc_to_p1}
+Midpoint Coords with Player ONE: {npc_p1_mid}
+Gradient with Player ONE: {npc_grad_p1}
+Distance to Player TWO: {npc_to_p2}
+Midpoint Coords with Player TWO: {npc_p2_mid}
+Gradient with Player TWO: {npc_grad_p2}
+''', 0.06)
 
 
 # print(f'Distance to Destination: {p2_to_destination}')
@@ -443,18 +444,18 @@ if npctoggle:
 
 #destination stats
 printstats(destdict['Name'], destdict['X'], destdict['Y'], 'grey')
-print(f'Distance to Player 1: {p1_to_destination}')
-print(f'Distance to Player 2: {p2_to_destination}')
-print(f'Gradient with Player 1: {grad_p1_destination}')
-print(f'Gradient with Player 2: {grad_p2_destination}')
-print(f'Midpoint Coords with Player 1: {mid_p1_destination}')
-print(f'Midpoint Coords with Player 2: {mid_p2_destination}')
-print('\n')
+slowprint(f'Distance to Player 1: {p1_to_destination}', 0.06)
+slowprint(f'Distance to Player 2: {p2_to_destination}', 0.06)
+slowprint(f'Gradient with Player 1: {grad_p1_destination}', 0.06)
+slowprint(f'Gradient with Player 2: {grad_p2_destination}', 0.06)
+slowprint(f'Midpoint Coords with Player 1: {mid_p1_destination}', 0.06)
+slowprint(f'Midpoint Coords with Player 2: {mid_p2_destination}', 0.06)
+('\n')
 playerturns = 1
 win = False
 direction = ''
 refresh_window()
-print('You must click every time for each move.')
+slowprint('You must click every time for each move.', 0.085)
 while win != True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -469,11 +470,11 @@ while win != True:
                 p1dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p1dict['X'], p1dict['Y'])
                 win = checkwin(p1dict, p2dict, destdict, p1dict['Num'])
                 if win == "Player ONE":
-                    print('The winner is: ' + colored(p1dict['Name'], p1dict['Colour']))
+                    slowprint('The winner is: ' + colored(p1dict['Name'], p1dict['Colour']), 0.085)
                 playerturns = 2
             elif playerturns == 2:
                 print()
-                print(colored('Player TWO:', p2dict['Colour']))
+                slowprint(colored('Player TWO:', p2dict['Colour']), 0.085)
                 dist, direction = inputcheck()
                 moveplayer(dist, direction, p2dict)
                 p2dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p2dict['X'], p2dict['Y'])
