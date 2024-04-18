@@ -4,9 +4,12 @@ import time
 import sys
 from termcolor import colored
 from triplesdictionary import triples
+from playsound import playsound
 
 pygame.init()
 app_clock = pygame.time.Clock()
+pygame.mixer.init()
+
 
 
 def remove(list):
@@ -100,6 +103,7 @@ def create_app_window(width, height):
     app_dimensions = (width + 10, height + 10)
     app_surf = pygame.display.set_mode(app_dimensions)
     app_surf_rect = app_surf.get_rect()
+    print()
     return app_surf, app_surf_rect
 
 def app_surf_update(destdict, p1dict, p2dict):
@@ -185,12 +189,12 @@ def checkwin(dictionary1, dictionary2, dictionary3, lastmove):
              return "NPC"
 
 def inputcheck():
-    slowprint('Please enter move in format: distance <space> direction.', 0.085) 
-    slowprint('The distance and direction must be natural numbers.', 0.085) 
-    slowprint("The distance must be 5 or larger.", 0.085)  
-    slowprint("The direction must to be from 1-8.", 0.085) 
+    slowprint('Please enter move in format: distance <space> direction.', 0.04) 
+    slowprint('The distance and direction must be natural numbers.', 0.04) 
+    slowprint("The distance must be 5 or larger.", 0.04)  
+    slowprint("The direction must to be from 1-8.", 0.04) 
     while True: 
-        move = slowinput("Enter your move: ", 0.085)
+        move = slowinput("Enter your move: ", 0.06)
         move = move.strip()
         try: 
             move=move.split(" ") # To get the distance and direction
@@ -215,15 +219,16 @@ def inputcheck():
 
 
 colours = ['grey', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white']
+music = 'off'
+songs = [1, 2, 'off']
 p1colour = 'red'
 p2colour = 'blue'
 npccolour = 'green'
 npctoggle = False
-functionloop = True
 size = 800
 sizes = [1,2,3,4,5,6,7,8,9,10]
 playersize = 5.0
-functionlist = ['planesize', 'togglenpc', 'playersize', 'playercolour', 'help', 'printsettings', 'start', 'quit']
+functionlist = ['planesize', 'togglenpc', 'playersize', 'playercolour', 'help', 'printsettings', 'start', 'quit', 'music']
 # slowprint('Here are a list of functions: ', 0.03)
 # print()
 # slowprint('PlaneSize: adjust the size of the plane.', 0.03)
@@ -245,10 +250,11 @@ PlaneSize: adjust the size of the plane.
 ToggleNPC: Toggle the NPC.
 PlayerSize: adjust the size of the players.
 PlayerColour: change the player colours.
+Music: select a music track.
 PrintSettings: prints all current settings.
 Help: prints the rules.
 Start: starts the game.''', 0.04)
-while functionloop:
+while True:
     function = slowinput('Enter function: ', 0.085)
     function = function.lower()
     while function not in functionlist:
@@ -289,7 +295,14 @@ while functionloop:
                 slowprint('Please select a colour from the list above.', 0.085)
                 npccolour = slowinput('Please choose a colour: ', 0.085).lower()
     elif function == 'start':
-        functionloop = False
+        if music == 'off':
+            continue
+        elif music == 1:
+            pygame.mixer.music.load('Song1.wav')
+        elif music == 2:
+            pygame.mixer.music.load('Song2.wav')
+        pygame.mixer.music.play()
+        break
     elif function == 'togglenpc':
         if npctoggle == True:
             npctoggle = False
@@ -309,13 +322,19 @@ You can only use primitive pythagorean triples.
         playersize = int(playersize)
     elif function == 'printsettings':
         print()
-        slowprint(colored('NPC', str(npccolour)) + f' Toggled: {npctoggle}', 0.085)
-        slowprint(colored('Player ONE', str(p1colour)) + f' colour: {p1colour}', 0.085)
-        slowprint(colored('Player TWO', str(p2colour)) + f' colour: {p2colour}', 0.085)
-        slowprint(colored('NPC', str(npccolour)) + f' colour: {npccolour}', 0.085)
-        slowprint(f'Plane Size: {size*2} by {size*2}', 0.085)
-        slowprint(f'Player Size: {playersize}', 0.085)
+        slowprint(colored('NPC', str(npccolour)) + f' Toggled: {npctoggle}', 0.05)
+        slowprint(colored('Player ONE', str(p1colour)) + f' colour: {p1colour}', 0.05)
+        slowprint(colored('Player TWO', str(p2colour)) + f' colour: {p2colour}', 0.05)
+        slowprint(colored('NPC', str(npccolour)) + f' colour: {npccolour}', 0.05)
+        slowprint(f'Plane Size: {size*2} by {size*2}', 0.05)
+        slowprint(f'Player Size: {playersize}', 0.05)
+        slowprint(f'Music Track: {music}', 0.05)
         print()
+    elif function == 'music':
+        slowprint('Here is the list of songs: ' + remove(songs), 0.085)
+        music = int(slowinput('Select a music track: ', 0.085))
+        while music not in songs:
+            music = int(slowinput('Select a music track: ', 0.085))
 
 
 p1dict = {
@@ -355,7 +374,7 @@ npcdict = {
     'Toggle': npctoggle,
 }
 
-app_surf, app_surf_rect = create_app_window(sizex, sizey)
+app_surf, app_surf_rect = create_app_window(size, size)
 
 initialise_entities()
 
@@ -391,66 +410,74 @@ npc_p2_mid = remove(npc_p2_mid)
 
 
 app_surf_update(destdict, p1dict, p2dict)
-#player 1 stats
-printstats(p1dict['Name'], p1dict['X'], p1dict['Y'], 'red')
+p = ['y', 'n']
+print = slowinput('Would you like to print stats?(y/n) ', 0.06).lower()
+while print not in p:
+    slowprint('Please enter y or n.', 0.05)
+    print = slowinput('Would you like to print stats?(y/n) ', 0.06).lower()
+if print == 'y':
+    #player 1 stats
+    printstats(p1dict['Name'], p1dict['X'], p1dict['Y'], 'red')
 
-# print(f'Distance to Destination: {p1_to_destination}')
-# print(f'Midpoint Coords with Destination: {mid_p1_destination}')
-# print(f'Gradient with Destination: {grad_p1_destination}')
-# print(f'Distance to Player 2: {players_distance}')
-# print(f'Midpoint Coords with Player 2: {players_mid}')
-# print(f'Gradient with Player 2: {grad_players}')
+    # print(f'Distance to Destination: {p1_to_destination}')
+    # print(f'Midpoint Coords with Destination: {mid_p1_destination}')
+    # print(f'Gradient with Destination: {grad_p1_destination}')
+    # print(f'Distance to Player 2: {players_distance}')
+    # print(f'Midpoint Coords with Player 2: {players_mid}')
+    # print(f'Gradient with Player 2: {grad_players}')
 
-slowprint(f'''Distance to Destination: {p1_to_destination}
-Midpoint Coords with Destination: {mid_p1_destination}
-Gradient with Destination: {grad_p1_destination}
-Distance to Player TWO: {players_distance}
-Midpoint Coords with Player TWO: {players_mid}
-Gradient with Player TWO: {grad_players}
-''', 0.05)
+    slowprint(f'''Distance to Destination: {p1_to_destination}
+    Midpoint Coords with Destination: {mid_p1_destination}
+    Gradient with Destination: {grad_p1_destination}
+    Distance to Player TWO: {players_distance}
+    Midpoint Coords with Player TWO: {players_mid}
+    Gradient with Player TWO: {grad_players}
+    ''', 0.05)
 
-#player 2 stats
-printstats(p2dict['Name'], p2dict['X'], p2dict['Y'], p2dict['Colour'])
-slowprint(f'''Distance to Destination: {p2_to_destination}
-Midpoint Coords with Destination: {mid_p2_destination}
-Gradient with Destination: {grad_p2_destination}
-Distance to Player ONE: {players_distance}
-Midpoint Coords with Player ONE: {players_mid}
-Gradient with Player ONE: {grad_players}
-''', 0.06)
+    #player 2 stats
+    printstats(p2dict['Name'], p2dict['X'], p2dict['Y'], p2dict['Colour'])
+    slowprint(f'''Distance to Destination: {p2_to_destination}
+    Midpoint Coords with Destination: {mid_p2_destination}
+    Gradient with Destination: {grad_p2_destination}
+    Distance to Player ONE: {players_distance}
+    Midpoint Coords with Player ONE: {players_mid}
+    Gradient with Player ONE: {grad_players}
+    ''', 0.06)
 
-if npctoggle:
-    printstats(npcdict['Name'], npcdict['X'], npcdict['Y'], npcdict['Colour'])
-    slowprint(f'''Distance to Destination: {npc_to_destination}
-Midpoint Coords with Destination: {npc_destination_mid}
-Gradient with Destination: {npc_grad_destination}
-Distance to Player ONE: {npc_to_p1}
-Midpoint Coords with Player ONE: {npc_p1_mid}
-Gradient with Player ONE: {npc_grad_p1}
-Distance to Player TWO: {npc_to_p2}
-Midpoint Coords with Player TWO: {npc_p2_mid}
-Gradient with Player TWO: {npc_grad_p2}
-''', 0.06)
-
-
-# print(f'Distance to Destination: {p2_to_destination}')
-# print(f'Distance to Player 2: {players_distance}')
-# print(f'Gradient with Destination: {grad_p2_destination}')
-# print(f'Gradient with Player ONE: {grad_players}')
-# print(f'Midpoint Coords with Player ONE: {mid_p2_destination}')
-# print(f'Midpoint Coords with Player ONE: {players_mid}')
-# print('\n')
+    if npctoggle:
+        printstats(npcdict['Name'], npcdict['X'], npcdict['Y'], npcdict['Colour'])
+        slowprint(f'''Distance to Destination: {npc_to_destination}
+    Midpoint Coords with Destination: {npc_destination_mid}
+    Gradient with Destination: {npc_grad_destination}
+    Distance to Player ONE: {npc_to_p1}
+    Midpoint Coords with Player ONE: {npc_p1_mid}
+    Gradient with Player ONE: {npc_grad_p1}
+    Distance to Player TWO: {npc_to_p2}
+    Midpoint Coords with Player TWO: {npc_p2_mid}
+    Gradient with Player TWO: {npc_grad_p2}
+    ''', 0.06)
 
 
-#destination stats
-printstats(destdict['Name'], destdict['X'], destdict['Y'], 'grey')
-slowprint(f'Distance to Player 1: {p1_to_destination}', 0.06)
-slowprint(f'Distance to Player 2: {p2_to_destination}', 0.06)
-slowprint(f'Gradient with Player 1: {grad_p1_destination}', 0.06)
-slowprint(f'Gradient with Player 2: {grad_p2_destination}', 0.06)
-slowprint(f'Midpoint Coords with Player 1: {mid_p1_destination}', 0.06)
-slowprint(f'Midpoint Coords with Player 2: {mid_p2_destination}', 0.06)
-('\n')
+    # print(f'Distance to Destination: {p2_to_destination}')
+    # print(f'Distance to Player 2: {players_distance}')
+    # print(f'Gradient with Destination: {grad_p2_destination}')
+    # print(f'Gradient with Player ONE: {grad_players}')
+    # print(f'Midpoint Coords with Player ONE: {mid_p2_destination}')
+    # print(f'Midpoint Coords with Player ONE: {players_mid}')
+    # print('\n')
+
+
+    #destination stats
+    printstats(destdict['Name'], destdict['X'], destdict['Y'], 'grey')
+    slowprint(f'Distance to Player ONE: {p1_to_destination}', 0.06)
+    slowprint(f'Distance to Player TWO: {p2_to_destination}', 0.06)
+    slowprint(f'Gradient with Player ONE: {grad_p1_destination}', 0.06)
+    slowprint(f'Gradient with Player TWO: {grad_p2_destination}', 0.06)
+    slowprint(f'Midpoint Coords with Player ONE: {mid_p1_destination}', 0.06)
+    slowprint(f'Midpoint Coords with Player TWO: {mid_p2_destination}', 0.06)
+    ('\n')
+    
+    
 playerturns = 1
 win = False
 direction = ''
