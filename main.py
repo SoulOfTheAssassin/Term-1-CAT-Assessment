@@ -94,11 +94,11 @@ def gradient(x1, y1, x2, y2):
     return var
 
 def printstats(name, x, y, colour):
-    slowprint(colored(f'{name}', colour) + ' Information', 0.085)
-    slowprint(colored(f'{name}', colour) + f' Coordinates: {x}, {y}', 0.085)
+    slowprint(colored(f'{name}', colour) + ' Information', 0.03)
+    slowprint(colored(f'{name}', colour) + f' Coordinates: {x}, {y}', 0.03)
 
 def create_app_window(width, height):
-    slowprint(f'\nWelcome. The plane goes from -{width/2} to {width/2} in both the x and y directions', 0.085)
+    slowprint(f'\nWelcome. The plane goes from -{width/2} to {width/2} in both the x and y directions', 0.03)
     pygame.display.set_caption("Gam ov Gradiante")           
     app_dimensions = (width + 10, height + 10)
     app_surf = pygame.display.set_mode(app_dimensions)
@@ -189,38 +189,39 @@ def checkwin(dictionary1, dictionary2, dictionary3, lastmove):
              return "NPC"
 
 def inputcheck():
-    slowprint('Please enter move in format: distance <space> direction.', 0.04) 
-    slowprint('The distance and direction must be natural numbers.', 0.04) 
-    slowprint("The distance must be 5 or larger.", 0.04)  
-    slowprint("The direction must to be from 1-8.", 0.04) 
+    slowprint('Please enter move in format: distance <space> direction.', 0.03) 
+    slowprint('The distance and direction must be natural numbers.', 0.03) 
+    slowprint("The distance must be 5 or larger.", 0.03)  
+    slowprint("The direction must to be from 1-8.", 0.03) 
     while True: 
-        move = slowinput("Enter your move: ", 0.06)
+        move = slowinput("Enter your move: ", 0.03)
         move = move.strip()
         try: 
             move=move.split(" ") # To get the distance and direction
         except:
-            slowprint("Please enter in format: distance <space> direction. ", 0.085)
+            slowprint("Please enter in format: distance <space> direction. ", 0.03)
             continue
         try:
             distance=int(move[0])
             direction=int(move[1])
         except:
-            slowprint("The distance and direction need to be natural numbers.", 0.085)
+            slowprint("The distance and direction need to be natural numbers.", 0.03)
             continue
         if direction > 8 or direction < 1:
-            slowprint("The direction has to be 1-8.", 0.085)
+            slowprint("The direction has to be 1-8.", 0.03)
         elif distance < 0:
-            slowprint("The distance cannot be negative.", 0.085)
+            slowprint("The distance cannot be negative.", 0.03)
         elif distance < 5:
-            slowprint("The distance must be 5 or larger. ", 0.085)
+            slowprint("The distance must be 5 or larger. ", 0.03)
         else:
-            slowprint("Move was successful.", 0.085)
+            slowprint("Move was successful.", 0.03)
             return distance, direction
 
 
+functionloop = True
 colours = ['grey', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white']
 music = 'off'
-songs = [1, 2, 'off']
+songs = [1, 2, 3, 4, 5, 6,  'off']
 p1colour = 'red'
 p2colour = 'blue'
 npccolour = 'green'
@@ -253,47 +254,47 @@ PlayerColour: change the player colours.
 Music: select a music track.
 PrintSettings: prints all current settings.
 Help: prints the rules.
-Start: starts the game.''', 0.04)
-while True:
-    function = slowinput('Enter function: ', 0.085)
+Start: starts the game.''', 0.01)
+while functionloop:
+    function = slowinput('Enter function: ', 0.03)
     function = function.lower()
     while function not in functionlist:
-        slowprint('This is not a valid function. Please try again. ', 0.085)
-        function = slowinput('Enter function: ', 0.085)
+        slowprint('This is not a valid function. Please try again. ', 0.03)
+        function = slowinput('Enter function: ', 0.03)
         function = function.lower()
     if function == 'planesize':
         while True:
             try:
-                size = int(slowinput('Enter Y of Cartesian Plane: ', 0.085))
+                size = int(slowinput('Enter Y of Cartesian Plane: ', 0.03))
             except:
-                slowprint('This is not a valid input. Please input using a natural number. ', 0.085)
+                slowprint('This is not a valid input. Please input using a natural number. ', 0.03)
             else: 
                 break
     elif function == 'playercolour':
         while True:
             try:
-                playernum = int(slowinput('Please choose which player: ', 0.085))
+                playernum = int(slowinput('Please choose which player: ', 0.03))
             except:
-                slowprint('Please use a single number.', 0.085)
+                slowprint('Please use a single number.', 0.03)
             else:
                 break
         slowprint(f'Here is a printout of the colour list: ' + colored('grey', 'grey')+ ', ' + colored('red', 'red') + ', ' + colored('green', 'green') + ', ' + colored('yellow', 'yellow') + ', ' + colored('blue', 'blue') + ', ' + colored('magenta', 'magenta') + ', ' + colored('cyan', 'cyan') + ', ' + colored('white', 'white') + '.', 0.03)
         print()
         if playernum == 1:
-            p1colour = slowinput('Please choose a colour: ', 0.085).lower()
+            p1colour = slowinput('Please choose a colour: ', 0.03).lower()
             while p1colour not in colours:
-                slowprint('Please select a colour from the list above.', 0.085)
-                p1colour = slowinput('Please choose a colour: ', 0.085).lower()
+                slowprint('Please select a colour from the list above.', 0.03)
+                p1colour = slowinput('Please choose a colour: ', 0.03).lower()
         elif playernum == 2:
-            p2colour = slowinput('Please choose a colour: ', 0.085).lower()
+            p2colour = slowinput('Please choose a colour: ', 0.03).lower()
             while p2colour not in colours:
-                slowprint('Please select a colour from the list above.', 0.085)
-                p2colour = slowinput('Please choose a colour: ', 0.085).lower()
+                slowprint('Please select a colour from the list above.', 0.03)
+                p2colour = slowinput('Please choose a colour: ', 0.03).lower()
         elif playernum == 3:
-            npccolour = slowinput('Please choose a colour: ', 0.085).lower()
+            npccolour = slowinput('Please choose a colour: ', 0.03).lower()
             while npccolour not in colours:
-                slowprint('Please select a colour from the list above.', 0.085)
-                npccolour = slowinput('Please choose a colour: ', 0.085).lower()
+                slowprint('Please select a colour from the list above.', 0.03)
+                npccolour = slowinput('Please choose a colour: ', 0.03).lower()
     elif function == 'start':
         if music == 'off':
             continue
@@ -301,40 +302,49 @@ while True:
             pygame.mixer.music.load('Song1.wav')
         elif music == 2:
             pygame.mixer.music.load('Song2.wav')
-        pygame.mixer.music.play()
-        break
+        elif music == 3:
+            pygame.mixer.music.load('Song3.wav')
+        elif music == 4:
+            pygame.mixer.music.load('Song4.wav')
+        elif music == 5:
+            pygame.mixer.music.load('The Pi Song  (Memorize 100 Digits Of π) _ SCIENCE SONGS.wav')
+        elif music == 6:
+            pygame.mixer.music.load('Spanish or Vanish (full song) from Duolingo On Ice.wav')
+        if music == int(music):
+            pygame.mixer.music.play()
+        functionloop = False
     elif function == 'togglenpc':
         if npctoggle == True:
             npctoggle = False
         elif npctoggle == False:
             npctoggle = True
-        slowprint(f'NPC Toggled: {npctoggle}', 0.085)
+        slowprint(f'NPC Toggled: {npctoggle}', 0.03)
     elif function == 'help':
         slowprint('''
 Two players are required to play this game. 
 To win, you must land on the destination or another player.
 You can only use primitive pythagorean triples.
-''', 0.085)
+''', 0.03)
     elif function == 'playersize':
-        playersize = slowinput('Please choose a size from 1-10: ', 0.085)
+        playersize = slowinput('Please choose a size from 1-10: ', 0.03)
         while playersize not in sizes:
-            playersize = slowinput('Please choose a number from 1-10: ', 0.085)
+            playersize = slowinput('Please choose a number from 1-10: ', 0.03)
         playersize = int(playersize)
     elif function == 'printsettings':
         print()
-        slowprint(colored('NPC', str(npccolour)) + f' Toggled: {npctoggle}', 0.05)
-        slowprint(colored('Player ONE', str(p1colour)) + f' colour: {p1colour}', 0.05)
-        slowprint(colored('Player TWO', str(p2colour)) + f' colour: {p2colour}', 0.05)
-        slowprint(colored('NPC', str(npccolour)) + f' colour: {npccolour}', 0.05)
-        slowprint(f'Plane Size: {size*2} by {size*2}', 0.05)
-        slowprint(f'Player Size: {playersize}', 0.05)
-        slowprint(f'Music Track: {music}', 0.05)
+        slowprint(colored('NPC', str(npccolour)) + f' Toggled: {npctoggle}', 0.03)
+        slowprint(colored('Player ONE', str(p1colour)) + f' colour: {p1colour}', 0.03)
+        slowprint(colored('Player TWO', str(p2colour)) + f' colour: {p2colour}', 0.03)
+        slowprint(colored('NPC', str(npccolour)) + f' colour: {npccolour}', 0.03)
+        slowprint(f'Plane Size: {size} by {size}', 0.03)
+        slowprint(f'Player Size: {playersize}', 0.03)
+        slowprint(f'Music Track: {music}', 0.03)
         print()
     elif function == 'music':
-        slowprint('Here is the list of songs: ' + remove(songs), 0.085)
-        music = int(slowinput('Select a music track: ', 0.085))
+        slowprint('Here is the list of songs: ' + remove(songs), 0.03)
+        music = int(slowinput('Select a music track: ', 0.03))
         while music not in songs:
-            music = int(slowinput('Select a music track: ', 0.085))
+            music = int(slowinput('Select a music track: ', 0.03))
 
 
 p1dict = {
@@ -411,11 +421,11 @@ npc_p2_mid = remove(npc_p2_mid)
 
 app_surf_update(destdict, p1dict, p2dict)
 p = ['y', 'n']
-print = slowinput('Would you like to print stats?(y/n) ', 0.06).lower()
-while print not in p:
-    slowprint('Please enter y or n.', 0.05)
-    print = slowinput('Would you like to print stats?(y/n) ', 0.06).lower()
-if print == 'y':
+pr = slowinput('Would you like to print stats?(y/n) ', 0.03).lower()
+while pr not in p:
+    slowprint('Please enter y or n.', 0.03)
+    pr = slowinput('Would you like to print stats?(y/n) ', 0.03).lower()
+if pr == 'y':
     #player 1 stats
     printstats(p1dict['Name'], p1dict['X'], p1dict['Y'], 'red')
 
@@ -482,7 +492,7 @@ playerturns = 1
 win = False
 direction = ''
 refresh_window()
-slowprint('You must click every time for each move.', 0.085)
+slowprint('You must click every time for each move.', 0.03)
 while win != True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -491,26 +501,26 @@ while win != True:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if playerturns == 1:
                 print()
-                slowprint(colored('Player ONE:', p1dict['Colour']), 0.085)
+                slowprint(colored('Player ONE:', p1dict['Colour']), 0.03)
                 dist, direction = inputcheck()
                 moveplayer(dist, direction, p1dict)
                 p1dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p1dict['X'], p1dict['Y'])
                 win = checkwin(p1dict, p2dict, destdict, p1dict['Num'])
                 if win == "Player ONE":
-                    slowprint('The winner is: ' + colored(p1dict['Name'], p1dict['Colour']), 0.085)
+                    slowprint('The winner is: ' + colored(p1dict['Name'], p1dict['Colour']), 0.03)
                 playerturns = 2
             elif playerturns == 2:
                 print()
-                slowprint(colored('Player TWO:', p2dict['Colour']), 0.085)
+                slowprint(colored('Player TWO:', p2dict['Colour']), 0.03)
                 dist, direction = inputcheck()
                 moveplayer(dist, direction, p2dict)
                 p2dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p2dict['X'], p2dict['Y'])
                 win = checkwin(p1dict, p2dict, destdict, p2dict['Num'])
                 if win == "Player TWO":
-                    slowprint('The winner is: ' + colored(p2dict['Name'], p2dict['Colour']), 0.085)
+                    slowprint('The winner is: ' + colored(p2dict['Name'], p2dict['Colour']), 0.03)
                 playerturns = 1
             if npctoggle:
-                slowprint(colored('NPC:', npcdict['Colour']), 0.085)
+                slowprint(colored('NPC:', npcdict['Colour']), 0.03)
                 slowprint('''Please enter move in format: distance <space> direction.
 The distance and direction must be natural numbers.
 The distance must be 5 or larger.
@@ -519,9 +529,9 @@ The direction must to be from 1-8.''', 0.03)
                 for char in f'Enter your move: ':
                     print(char, end='')
                     sys.stdout.flush()
-                    time.sleep(0.06)
+                    time.sleep(0.03)
                 time.sleep(1)
-                slowprint(npcdistance + npcdirection, 0.085)
+                slowprint(npcdistance + npcdirection, 0.03)
                 # win = checkwin()
                 
                 
