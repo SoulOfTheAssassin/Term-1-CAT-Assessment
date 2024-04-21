@@ -4,7 +4,7 @@ import time
 import sys
 from termcolor import colored
 from triplesdictionary import triples
-from playsound import playsound
+from inputimeout import inputimeout 
 
 pygame.init()
 app_clock = pygame.time.Clock()
@@ -219,15 +219,15 @@ def inputcheck():
 
 
 functionloop = True
-colours = ['grey', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white']
+colours = ['grey', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'quit']
 music = 'off'
-songs = [1, 2, 3, 4, 5, 6,  'off']
+songs = [1, 2, 3, 4, 5, 6, 'off', 'quit']
 p1colour = 'red'
 p2colour = 'blue'
 npccolour = 'green'
 npctoggle = False
 size = 800
-sizes = [1,2,3,4,5,6,7,8,9,10]
+sizes = [1,2,3,4,5,6,7,8,9,10,'quit']
 playersize = 5.0
 functionlist = ['planesize', 'togglenpc', 'playersize', 'playercolour', 'help', 'printsettings', 'start', 'quit', 'music']
 # slowprint('Here are a list of functions: ', 0.03)
@@ -254,7 +254,8 @@ PlayerColour: change the player colours.
 Music: select a music track.
 PrintSettings: prints all current settings.
 Help: prints the rules.
-Start: starts the game.''', 0.01)
+Start: starts the game.
+Quit: quits the program''', 0.01)
 while functionloop:
     function = slowinput('Enter function: ', 0.03)
     function = function.lower()
@@ -329,7 +330,10 @@ You can only use primitive pythagorean triples.
         playersize = slowinput('Please choose a size from 1-10: ', 0.03)
         while playersize not in sizes:
             playersize = slowinput('Please choose a number from 1-10: ', 0.03)
-        playersize = int(playersize)
+        if playersize == 'quit':
+            exit()
+        else:
+            playersize = int(playersize)
     elif function == 'printsettings':
         print()
         slowprint(colored('NPC', str(npccolour)) + f' Toggled: {npctoggle}', 0.03)
@@ -341,10 +345,14 @@ You can only use primitive pythagorean triples.
         slowprint(f'Music Track: {music}', 0.03)
         print()
     elif function == 'music':
-        slowprint('Here is the list of songs: ' + remove(songs), 0.03)
+        slowprint('Here are the list of options: ' + remove(songs) + '.', 0.03)
         music = int(slowinput('Select a music track: ', 0.03))
         while music not in songs:
             music = int(slowinput('Select a music track: ', 0.03))
+        if music == 'quit':
+            exit()
+    elif function == 'quit':
+        exit()
 
 
 p1dict = {
