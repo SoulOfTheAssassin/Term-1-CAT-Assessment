@@ -1,10 +1,12 @@
 import random
+from re import L
 import pygame
 import time
 import sys
 from termcolor import colored
 from triplesdictionary import triples
 from inputimeout import inputimeout 
+from playsound import playsound
 
 pygame.init()
 app_clock = pygame.time.Clock()
@@ -98,7 +100,7 @@ def printstats(name, x, y, colour):
     slowprint(colored(f'{name}', colour) + f' Coordinates: {x}, {y}', 0.03)
 
 def create_app_window(width, height):
-    slowprint(f'\nWelcome. The plane goes from -{width/2} to {width/2} in both the x and y directions', 0.03)
+    slowprint(f'\nWelcome. The plane goes from -{width} to {width} in both the x and y directions', 0.03)
     pygame.display.set_caption("Gam ov Gradiante")           
     app_dimensions = (width + 10, height + 10)
     app_surf = pygame.display.set_mode(app_dimensions)
@@ -111,11 +113,11 @@ def app_surf_update(destdict, p1dict, p2dict):
     pygame.draw.line(app_surf, 'grey',(0,app_surf_rect.height/2),(app_surf_rect.width,app_surf_rect.height/2),width=1)
     pygame.draw.line(app_surf, 'grey',(app_surf_rect.width/2, 0),(app_surf_rect.width/2,app_surf_rect.height),width=1)
     pygame.draw.circle(app_surf, 'black',destdict['Pygame Coords'], radius = 3, width = 3)
-    pygame.draw.circle(app_surf, 'black',destdict['Pygame Coords'], radius = playersize, width = 1)
+    pygame.draw.circle(app_surf, 'black',destdict['Pygame Coords'], radius = float(playersize), width = 1)
     pygame.draw.circle(app_surf, p1dict['Colour'], p1dict['Pygame Coords'], radius = 3, width = 2)
     pygame.draw.circle(app_surf, p2dict['Colour'], p2dict['Pygame Coords'], radius = 3, width = 2)
-    pygame.draw.circle(app_surf, p1dict['Colour'], p1dict['Pygame Coords'], radius = playersize, width = 1)
-    pygame.draw.circle(app_surf, p2dict['Colour'], p2dict['Pygame Coords'], radius = playersize, width = 1)
+    pygame.draw.circle(app_surf, p1dict['Colour'], p1dict['Pygame Coords'], radius = float(playersize), width = 1)
+    pygame.draw.circle(app_surf, p2dict['Colour'], p2dict['Pygame Coords'], radius = float(playersize), width = 1)
 
 def refresh_window():
     pygame.display.update() # refresh the screen with what we drew inside the app_surf_update() function
@@ -219,7 +221,7 @@ def inputcheck():
 
 
 functionloop = True
-colours = ['grey', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'quit']
+colours = ['grey', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'quit', 'chicken nugget']
 music = 'off'
 songs = [1, 2, 3, 4, 5, 6, 'off', 'quit']
 p1colour = 'red'
@@ -266,7 +268,7 @@ while functionloop:
     if function == 'planesize':
         while True:
             try:
-                size = int(slowinput('Enter Y of Cartesian Plane: ', 0.03))
+                size = int(slowinput('Enter size of Cartesian Plane: ', 0.03))
             except:
                 slowprint('This is not a valid input. Please input using a natural number. ', 0.03)
             else: 
@@ -297,9 +299,11 @@ while functionloop:
                 slowprint('Please select a colour from the list above.', 0.03)
                 npccolour = slowinput('Please choose a colour: ', 0.03).lower()
     elif function == 'start':
-        if music == 'off':
+        try:
+            sound = int(music)
+        except:
             continue
-        elif music == 1:
+        if music == 1:
             pygame.mixer.music.load('Song1.wav')
         elif music == 2:
             pygame.mixer.music.load('Song2.wav')
@@ -308,10 +312,10 @@ while functionloop:
         elif music == 4:
             pygame.mixer.music.load('Song4.wav')
         elif music == 5:
-            pygame.mixer.music.load('The Pi Song  (Memorize 100 Digits Of π) _ SCIENCE SONGS.wav')
+            pygame.mixer.music.load('Song5.wav')
         elif music == 6:
-            pygame.mixer.music.load('Spanish or Vanish (full song) from Duolingo On Ice.wav')
-        if music == int(music):
+            pygame.mixer.music.load('Song6.wav')
+        if sound == music:
             pygame.mixer.music.play()
         functionloop = False
     elif function == 'togglenpc':
@@ -357,8 +361,8 @@ You can only use primitive pythagorean triples.
 
 p1dict = {
     'Name': 'Player ONE',
-    'X': random.randint(1,size),
-    'Y': random.randint(1,size),
+    'X': random.randint(-size,size),
+    'Y': random.randint(-size,size),
     'Pygame Coords': None,
     'Colour': p1colour,
     'Num': 1,
@@ -366,8 +370,8 @@ p1dict = {
 
 p2dict = {
     'Name': 'Player TWO',
-    'X': random.randint(1,size),
-    'Y': random.randint(1, size),
+    'X': random.randint(-size,size),
+    'Y': random.randint(-size, size),
     'Pygame Coords': None,
     'Colour': p2colour,
     'Num': 2,
@@ -375,17 +379,17 @@ p2dict = {
 
 destdict = {
     'Name': 'Destination',
-    'X': random.randint(1, size),
-    'Y': random.randint(1, size),
+    'X': random.randint(-size, size),
+    'Y': random.randint(-size, size),
     'Pygame Coords': None,
     'Colour': 'black',
     'Num': None,
 }
 
 npcdict = {
-    'Name': 'Destination',
-    'X': random.randint(1, size),
-    'Y': random.randint(1, size),
+    'Name': 'NPC',
+    'X': random.randint(-size, size),
+    'Y': random.randint(-size, size),
     'Pygame Coords': None,
     'Colour': npccolour,
     'Num': 3,
@@ -445,34 +449,34 @@ if pr == 'y':
     # print(f'Gradient with Player 2: {grad_players}')
 
     slowprint(f'''Distance to Destination: {p1_to_destination}
-    Midpoint Coords with Destination: {mid_p1_destination}
-    Gradient with Destination: {grad_p1_destination}
-    Distance to Player TWO: {players_distance}
-    Midpoint Coords with Player TWO: {players_mid}
-    Gradient with Player TWO: {grad_players}
+Midpoint Coords with Destination: {mid_p1_destination}
+Gradient with Destination: {grad_p1_destination}
+Distance to Player TWO: {players_distance}
+Midpoint Coords with Player TWO: {players_mid}
+Gradient with Player TWO: {grad_players}
     ''', 0.03)
 
     #player 2 stats
     printstats(p2dict['Name'], p2dict['X'], p2dict['Y'], p2dict['Colour'])
     slowprint(f'''Distance to Destination: {p2_to_destination}
-    Midpoint Coords with Destination: {mid_p2_destination}
-    Gradient with Destination: {grad_p2_destination}
-    Distance to Player ONE: {players_distance}
-    Midpoint Coords with Player ONE: {players_mid}
-    Gradient with Player ONE: {grad_players}
+Midpoint Coords with Destination: {mid_p2_destination}
+Gradient with Destination: {grad_p2_destination}
+Distance to Player ONE: {players_distance}
+Midpoint Coords with Player ONE: {players_mid}
+Gradient with Player ONE: {grad_players}
     ''', 0.03)
 
     if npctoggle:
         printstats(npcdict['Name'], npcdict['X'], npcdict['Y'], npcdict['Colour'])
         slowprint(f'''Distance to Destination: {npc_to_destination}
-    Midpoint Coords with Destination: {npc_destination_mid}
-    Gradient with Destination: {npc_grad_destination}
-    Distance to Player ONE: {npc_to_p1}
-    Midpoint Coords with Player ONE: {npc_p1_mid}
-    Gradient with Player ONE: {npc_grad_p1}
-    Distance to Player TWO: {npc_to_p2}
-    Midpoint Coords with Player TWO: {npc_p2_mid}
-    Gradient with Player TWO: {npc_grad_p2}
+Midpoint Coords with Destination: {npc_destination_mid}
+Gradient with Destination: {npc_grad_destination}
+Distance to Player ONE: {npc_to_p1}
+Midpoint Coords with Player ONE: {npc_p1_mid}
+Gradient with Player ONE: {npc_grad_p1}
+Distance to Player TWO: {npc_to_p2}
+Midpoint Coords with Player TWO: {npc_p2_mid}
+Gradient with Player TWO: {npc_grad_p2}
     ''', 0.03)
 
 
@@ -487,14 +491,21 @@ if pr == 'y':
 
     #destination stats
     printstats(destdict['Name'], destdict['X'], destdict['Y'], 'grey')
-    slowprint(f'Distance to Player ONE: {p1_to_destination}', 0.03)
-    slowprint(f'Distance to Player TWO: {p2_to_destination}', 0.03)
-    slowprint(f'Gradient with Player ONE: {grad_p1_destination}', 0.03)
-    slowprint(f'Gradient with Player TWO: {grad_p2_destination}', 0.03)
-    slowprint(f'Midpoint Coords with Player ONE: {mid_p1_destination}', 0.03)
-    slowprint(f'Midpoint Coords with Player TWO: {mid_p2_destination}', 0.03)
-    ('\n')
-    
+    # slowprint(f'Distance to Player ONE: {p1_to_destination}', 0.03)
+    # slowprint(f'Distance to Player TWO: {p2_to_destination}', 0.03)
+    # slowprint(f'Gradient with Player ONE: {grad_p1_destination}', 0.03)
+    # slowprint(f'Gradient with Player TWO: {grad_p2_destination}', 0.03)
+    # slowprint(f'Midpoint Coords with Player ONE: {mid_p1_destination}', 0.03)
+    # slowprint(f'Midpoint Coords with Player TWO: {mid_p2_destination}', 0.03)
+
+    slowprint(f'''Distance to Player ONE: {p1_to_destination}
+Distance to Player TWO: {p2_to_destination}
+Gradient with Player ONE: {grad_p1_destination}
+Gradient with Player ONE: {grad_p1_destination}
+Gradient with Player TWO: {grad_p2_destination}
+Midpoint Coords with Player ONE: {mid_p1_destination}
+Midpoint Coords with Player TWO: {mid_p2_destination}
+''', 0.03)
     
 playerturns = 1
 win = False
@@ -526,8 +537,11 @@ while win != True:
                 win = checkwin(p1dict, p2dict, destdict, p2dict['Num'])
                 if win == "Player TWO":
                     slowprint('The winner is: ' + colored(p2dict['Name'], p2dict['Colour']), 0.03)
-                playerturns = 1
-            if npctoggle:
+                if npctoggle:
+                    playerturns = 3
+                else:
+                    playerturns = 1
+            if playerturns == 3:
                 slowprint(colored('NPC:', npcdict['Colour']), 0.03)
                 slowprint('''Please enter move in format: distance <space> direction.
 The distance and direction must be natural numbers.
@@ -541,9 +555,8 @@ The direction must to be from 1-8.''', 0.03)
                 time.sleep(1)
                 slowprint(npcdistance + npcdirection, 0.03)
                 # win = checkwin()
+                playerturns = 1
                 
-                
-           
-    app_surf_update(destdict, p1dict, p2dict)
-    refresh_window()
+        app_surf_update(destdict, p1dict, p2dict)
+        refresh_window()
     
