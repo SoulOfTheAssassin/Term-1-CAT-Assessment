@@ -1,13 +1,10 @@
-import functools
 import random
-from re import L
 import pygame
 import time
 import sys
 from termcolor import colored
 from triplesdictionary import triples
-from inputimeout import inputimeout 
-from playsound import playsound
+
 
 pygame.init()
 app_clock = pygame.time.Clock()
@@ -21,21 +18,21 @@ def remove(list):
     var = var.replace(']', '')
     return var
 
-def hypotenuse(x, y):
+def hypotenuse(x:int, y:int):
     x = x ** 2  
     y = y ** 2
     e = x + y
     e = e ** 0.5
     return int(e)
 
-def distance(px, py, dx, dy):  #
+def distance(px:int, py:int, dx:int, dy:int):
     xdistance = dx - px                                               
     ydistance = dy - py                                                 
     p1_distance = hypotenuse(xdistance, ydistance)                 
     distance = round(p1_distance, 1)
     return distance
 
-def npc_move(distance:float, gradient:float, npc_x, destination_x) -> str: # calculates the move for the npc and returns str in the format distance<space>direction.
+def npc_move(distance:float, gradient:float, npc_x:int, destination_x:int) -> str: # calculates the move for the npc and returns str in the format distance<space>direction.
 # actual movement (direction)
     try:
         if gradient >= 0:
@@ -55,10 +52,10 @@ def npc_move(distance:float, gradient:float, npc_x, destination_x) -> str: # cal
         distance = size * 2
     return str(distance) + " " + direction
 
-def pos_to_neg(x):
+def pos_to_neg(x:int):
     return 0-x
 
-def slowprint(str, speed):
+def slowprint(str:str, speed:float):
     for char in str:
         print(char, end='')
         sys.stdout.flush()
@@ -66,7 +63,7 @@ def slowprint(str, speed):
     time.sleep(1)
     print()
     
-def slowinput(str, speed):
+def slowinput(str:str, speed:float):
     for char in str:
         print(char, end='')
         sys.stdout.flush()
@@ -74,21 +71,12 @@ def slowinput(str, speed):
     c = input()
     return c
 
-def difference(x1, x2):
-    if x1 < x2:
-        placeholderx = x2 - x1
-    elif x1 > x2:
-        placeholderx = x1 - x2
-    elif x1 == x2:
-        placeholderx = x1
-    return placeholderx
-
-def midpoint(x1, y1, x2, y2):
+def midpoint(x1:int, y1:int, x2:int, y2:int):
     x = (x1 + x2)/2                            
     y = (y1 + y2)/2  
     return [x, y]
 
-def gradient(x1, y1, x2, y2):
+def gradient(x1:int, y1:int, x2:int, y2:int):
     try:
         var = (y2 - y1)/(x2 - x1)
     except ZeroDivisionError:
@@ -96,11 +84,11 @@ def gradient(x1, y1, x2, y2):
     var = round(var, 1)
     return var
 
-def printstats(name, x, y, colour):
+def printstats(name:str, x:int, y:int, colour:str):
     slowprint(colored(f'{name}', colour) + ' Information', 0.03)
     slowprint(colored(f'{name}', colour) + f' Coordinates: {x}, {y}', 0.03)
 
-def create_app_window(width, height):
+def create_app_window(width:int, height:int):
     slowprint(f'\nWelcome. The plane goes from -{width} to {width} in both the x and y directions.', 0.03)
     pygame.display.set_caption("Gam ov Gradiante")           
     app_dimensions = (width + 10, height + 10)
@@ -109,22 +97,26 @@ def create_app_window(width, height):
     print()
     return app_surf, app_surf_rect
 
-def app_surf_update(destdict, p1dict, p2dict):
+def app_surf_update(destdict:dict, p1dict:dict, p2dict:dict, npcdict:dict, npctoggle:bool):
     app_surf.fill('white')
     pygame.draw.line(app_surf, 'grey',(0,app_surf_rect.height/2),(app_surf_rect.width,app_surf_rect.height/2),width=1)
     pygame.draw.line(app_surf, 'grey',(app_surf_rect.width/2, 0),(app_surf_rect.width/2,app_surf_rect.height),width=1)
     pygame.draw.circle(app_surf, 'black',destdict['Pygame Coords'], radius = 3, width = 3)
-    pygame.draw.circle(app_surf, 'black',destdict['Pygame Coords'], radius = float(playersize), width = 1)
+    pygame.draw.circle(app_surf, 'black',destdict['Pygame Coords'], radius = float(buffersize), width = 1)
     pygame.draw.circle(app_surf, p1dict['Colour'], p1dict['Pygame Coords'], radius = 3, width = 2)
     pygame.draw.circle(app_surf, p2dict['Colour'], p2dict['Pygame Coords'], radius = 3, width = 2)
-    pygame.draw.circle(app_surf, p1dict['Colour'], p1dict['Pygame Coords'], radius = float(playersize), width = 1)
-    pygame.draw.circle(app_surf, p2dict['Colour'], p2dict['Pygame Coords'], radius = float(playersize), width = 1)
+    pygame.draw.circle(app_surf, p1dict['Colour'], p1dict['Pygame Coords'], radius = float(buffersize), width = 1)
+    pygame.draw.circle(app_surf, p2dict['Colour'], p2dict['Pygame Coords'], radius = float(buffersize), width = 1)
+    if npctoggle:
+        pygame.draw.circle(app_surf, npcdict['Colour'], npcdict['Pygame Coords'], radius = 3, width = 1)
+        pygame.draw.circle(app_surf, npcdict['Colour'], npcdict['Pygame Coords'], radius = float(buffersize), width = 1)
+    
 
 def refresh_window():
     pygame.display.update() # refresh the screen with what we drew inside the app_surf_update() function
     app_clock.tick(24)      # tell pygame to refresh the screen 24 times per second
 
-def conv_cartesian_to_pygame_coords(x,y):
+def conv_cartesian_to_pygame_coords(x:int,y:int):
     # pygame's coordinate system has the origin at the top left corner which is weird (they have good reasons for this)
     # x values increase to the right and y values increase going DOWN which is backwards!
     # we need to move the x coordinate to the center which is easy - just add half a window width
@@ -137,8 +129,9 @@ def initialise_entities():
     p1dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p1dict['X'], p1dict['Y']) # convert and store pygame coordinates
     p2dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p2dict['X'], p2dict['Y'])
     destdict['Pygame Coords'] = conv_cartesian_to_pygame_coords(destdict['X'], destdict['Y'])
+    npcdict['Pygame Coords'] = conv_cartesian_to_pygame_coords(npcdict['X'], npcdict['Y'])
 
-def moveplayer(distance, direction, dictionary):
+def moveplayer(distance:int, direction:int, dictionary:dict):
     iffound = False
     while iffound == False:
         for triple in triples:
@@ -174,28 +167,30 @@ def moveplayer(distance, direction, dictionary):
         dictionary['X'] += b
         dictionary['Y'] -= a
 
-def checkwin(dictionary1, dictionary2, dictionary3, lastmove):
-     if dictionary1['X'] == dictionary2['X'] and dictionary1['Y'] == dictionary2['Y']:
-         win = True
-     elif dictionary1['X'] == dictionary3['X'] and dictionary1['Y'] == dictionary3['Y']:
-         win = True
-     elif dictionary3['X'] == dictionary2['X'] and dictionary3['Y'] == dictionary2['Y']:
-         win = True
-     else: 
-         return False
-     if win: 
-         if lastmove == 1:
-             slowprint('Congratulations! Player ONE wins!', 0.05)
-         elif lastmove == 2:
-             slowprint('Congratulations! Player TWO wins!', 0.05)
-         elif lastmove == 3:
-             slowprint('Unlucky... The NPC beat you...', 0.05)
+def checkwin(dictionary1:dict, dictionary2:dict, dictionary3:dict, npc:dict, buffer:float, lastmove:int):
+    if distance(dictionary1['X'], dictionary1['Y'], dictionary2['X'], dictionary2['Y']) <= buffer:
+        win = True
+    elif distance(dictionary1['X'], dictionary1['Y'], dictionary3['X'], dictionary3['Y']) <= buffer:
+        win = True
+    elif distance(dictionary1['X'], dictionary1['Y'], npc['X'], npc['Y']) <= buffer:
+        win = True
+    elif distance(dictionary3['X'], dictionary3['Y'], dictionary2['X'], dictionary2['Y']) <= buffer:
+        win = True
+    elif distance(dictionary3['X'], dictionary3['Y'], npc['X'], npc['Y']) <= buffer:
+        win = True
+    else: 
+        return False
+    if win: 
+        if lastmove == 1:
+            slowprint('Congratulations! Player ONE wins!', 0.05)
+        elif lastmove == 2:
+            slowprint('Congratulations! Player TWO wins!', 0.05)
+        elif lastmove == 3:
+            slowprint('Unlucky... The NPC beat you...', 0.05)
+        return True
 
 def inputcheck():
     slowprint('Please enter move in format: distance <space> direction.', 0.03) 
-    slowprint('The distance and direction must be natural numbers.', 0.03) 
-    slowprint("The distance must be 5 or larger.", 0.03)  
-    slowprint("The direction must to be from 1-8.", 0.03) 
     while True: 
         move = slowinput("Enter your move: ", 0.03)
         move = move.strip()
@@ -231,9 +226,11 @@ while playagain == 'y':
     npccolour = 'green'
     npctoggle = False
     size = 800
-    sizes = [1,2,3,4,5,6,7,8,9,10,'quit']
-    playersize = 5.0
-    functionlist = ['planesize', 'togglenpc', 'playersize', 'playercolour', 'help', 'printsettings', 'start', 'quit', 'music']
+    sizes = ['1','2','3','4','5','6','7','8','9','10','quit']
+    buffersize = 5.0
+    functionlist = ['planesize', 'togglenpc', 'buffersize', 'playercolour', 'help', 'printsettings', 'start', 'quit', 'music']
+    playerlist = [1, 2, 3]
+    playernum = ''
     # slowprint('Here are a list of functions: ', 0.03)
     # print()
     # slowprint('PlaneSize: adjust the size of the plane.', 0.03)
@@ -253,7 +250,7 @@ while playagain == 'y':
     slowprint('''Here are a list of functions: 
 PlaneSize: adjust the size of the plane.
 ToggleNPC: Toggle the NPC.
-PlayerSize: adjust the size of the players.
+BufferSize: adjust the size of the player buffer.
 PlayerColour: change the player colours.
 Music: select a music track.
 PrintSettings: prints all current settings.
@@ -278,13 +275,8 @@ Quit: quits the program.''', 0.01)
                 else: 
                     break
         elif function == 'playercolour':
-            while True:
-                try:
-                    playernum = int(slowinput('Please choose which player: ', 0.03))
-                except:
-                    slowprint('Please use a single number.', 0.03)
-                else:
-                    break
+            while playernum not in playerlist:
+                playernum = slowinput('Please choose a player: ', 0.04)                
             slowprint(f'Here is a printout of the colour list: ' + colored('grey', 'grey')+ ', ' + colored('red', 'red') + ', ' + colored('green', 'green') + ', ' + colored('yellow', 'yellow') + ', ' + colored('blue', 'blue') + ', ' + colored('magenta', 'magenta') + ', ' + colored('cyan', 'cyan') + ', ' + colored('white', 'white') + '.', 0.03)
             print()
             if playernum == 1:
@@ -310,13 +302,19 @@ Quit: quits the program.''', 0.01)
                     pygame.mixer.music.load('Song2.wav')
                 elif music == '3':
                     pygame.mixer.music.load('Song3.wav')
+                    slowprint('Song by ASAPScience', 0.04)
                 elif music == '4':
                     pygame.mixer.music.load('Song4.wav')
+                    slowprint('Song by Sheet Music Boss', 0.04)
                 elif music == '5':
                     pygame.mixer.music.load('Song5.wav')
+                    slowprint('Song by ASAPScience', 0.04)
                 elif music == '6':
                     pygame.mixer.music.load('Song6.wav')
+                    slowprint('Song by Sean', 0.04)
                 pygame.mixer.music.play()
+            else:
+                pygame.mixer.music.unload()
             functionloop = False
             break
         elif function == 'togglenpc':
@@ -331,7 +329,7 @@ Two players are required to play this game.
 To win, you must land on the destination or another player.
 You can only use primitive pythagorean triples.
 ''', 0.03)
-        elif function == 'playersize':
+        elif function == 'buffersize':
             playersize = slowinput('Please choose a size from 1-10: ', 0.03)
             while playersize not in sizes:
                 playersize = slowinput('Please choose a number from 1-10: ', 0.03)
@@ -440,7 +438,7 @@ You can only use primitive pythagorean triples.
     npc_p2_mid = remove(npc_p2_mid)
 
 
-    app_surf_update(destdict, p1dict, p2dict)
+    app_surf_update(destdict, p1dict, p2dict, npcdict, npctoggle)
     options = ['y', 'n']
     pr = slowinput('Would you like to print stats?(y/n) ', 0.03).lower()
     while pr not in options:
@@ -510,7 +508,6 @@ Gradient with Player TWO: {npc_grad_p2}
         slowprint(f'''Distance to Player ONE: {p1_to_destination}
 Distance to Player TWO: {p2_to_destination}
 Gradient with Player ONE: {grad_p1_destination}
-Gradient with Player ONE: {grad_p1_destination}
 Gradient with Player TWO: {grad_p2_destination}
 Midpoint Coords with Player ONE: {mid_p1_destination}
 Midpoint Coords with Player TWO: {mid_p2_destination}
@@ -533,7 +530,7 @@ Midpoint Coords with Player TWO: {mid_p2_destination}
                     dist, direction = inputcheck()
                     moveplayer(dist, direction, p1dict)
                     p1dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p1dict['X'], p1dict['Y'])
-                    checkwin(p1dict, p2dict, destdict, p1dict['Num'])
+                    win = checkwin(p1dict, p2dict, destdict, npcdict, buffersize, p1dict['Num'])
                     playerturns = 2
                 elif playerturns == 2:
                     print()
@@ -541,29 +538,27 @@ Midpoint Coords with Player TWO: {mid_p2_destination}
                     dist, direction = inputcheck()
                     moveplayer(dist, direction, p2dict)
                     p2dict['Pygame Coords'] = conv_cartesian_to_pygame_coords(p2dict['X'], p2dict['Y'])
-                    checkwin(p1dict, p2dict, destdict, p2dict['Num'])
+                    win = checkwin(p1dict, p2dict, destdict, npcdict, buffersize, p2dict['Num'])
                     if npctoggle:
                         playerturns = 3
                     else:
                         playerturns = 1
                 if playerturns == 3:
+                    print()
                     slowprint(colored('NPC:', npcdict['Colour']), 0.03)
-                    slowprint('''Please enter move in format: distance <space> direction.
-The distance and direction must be natural numbers.
-The distance must be 5 or larger.
-The direction must to be from 1-8.''', 0.03)
-                    npcdistance, npcdirection = npc_move(npc_to_destination, npc_grad_destination, npcdict['X'], destdict['X'])
+                    slowprint('Please enter move in format: distance <space> direction.', 0.03)
+                    npcmove = npc_move(npc_to_destination, float(npc_grad_destination), npcdict['X'], destdict['X'])
                     for char in f'Enter your move: ':
                         print(char, end='')
                         sys.stdout.flush()
                         time.sleep(0.03)
                     time.sleep(1)
-                    slowprint(npcdistance + npcdirection, 0.03)
-                    # win = checkwin()
+                    slowprint(npcmove, 0.03)
+                    win = checkwin(p1dict, p2dict, destdict, npcdict, buffersize, npcdict['Num'])
                     playerturns = 1
 
                     
-            app_surf_update(destdict, p1dict, p2dict)
+            app_surf_update(destdict, p1dict, p2dict, npcdict, npctoggle)
             refresh_window()
         
     playagain = slowinput('Would you like to play again? (y/n) ', 0.05).lower()
@@ -571,5 +566,5 @@ The direction must to be from 1-8.''', 0.03)
         slowprint('Please enter y or n.', 0.06)
         playagain = slowinput('Would you like to play again? (y/n) ', 0.05).lower()
 
-sys.exit()
 pygame.quit()
+sys.exit()
