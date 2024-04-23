@@ -101,7 +101,7 @@ def printstats(name, x, y, colour):
     slowprint(colored(f'{name}', colour) + f' Coordinates: {x}, {y}', 0.03)
 
 def create_app_window(width, height):
-    slowprint(f'\nWelcome. The plane goes from -{width} to {width} in both the x and y directions', 0.03)
+    slowprint(f'\nWelcome. The plane goes from -{width} to {width} in both the x and y directions.', 0.03)
     pygame.display.set_caption("Gam ov Gradiante")           
     app_dimensions = (width + 10, height + 10)
     app_surf = pygame.display.set_mode(app_dimensions)
@@ -225,7 +225,7 @@ while playagain == 'y':
     functionloop = True
     colours = ['grey', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'quit', 'chicken nugget']
     music = 'off'
-    songs = [1, 2, 3, 4, 5, 6, 'off', 'quit']
+    songs = ['1', '2', '3', '4', '5', '6', 'off', 'quit']
     p1colour = 'red'
     p2colour = 'blue'
     npccolour = 'green'
@@ -304,17 +304,17 @@ Quit: quits the program.''', 0.01)
                     npccolour = slowinput('Please choose a colour: ', 0.03).lower()
         elif function == 'start':
             if music.isnumeric():
-                if music == 1:
+                if music == '1':
                     pygame.mixer.music.load('Song1.wav')
-                elif music == 2:
+                elif music == '2':
                     pygame.mixer.music.load('Song2.wav')
-                elif music == 3:
+                elif music == '3':
                     pygame.mixer.music.load('Song3.wav')
-                elif music == 4:
+                elif music == '4':
                     pygame.mixer.music.load('Song4.wav')
-                elif music == 5:
+                elif music == '5':
                     pygame.mixer.music.load('Song5.wav')
-                elif music == 6:
+                elif music == '6':
                     pygame.mixer.music.load('Song6.wav')
                 pygame.mixer.music.play()
             functionloop = False
@@ -352,12 +352,10 @@ You can only use primitive pythagorean triples.
         elif function == 'music':
             slowprint('Here are the list of options: ' + remove(songs) + '.', 0.03)
             music = slowinput('Select a music track: ', 0.03)
-            if music == 'quit':
-                exit()
             while music not in songs:
                 music = slowinput('Select a music track: ', 0.03)
-                if music == 'quit':
-                    exit()
+            if music == 'quit':
+                exit()
         elif function == 'quit':
             exit()
         elif function == 'buffer':
@@ -445,7 +443,7 @@ You can only use primitive pythagorean triples.
     app_surf_update(destdict, p1dict, p2dict)
     options = ['y', 'n']
     pr = slowinput('Would you like to print stats?(y/n) ', 0.03).lower()
-    while pr not in p:
+    while pr not in options:
         slowprint('Please enter y or n.', 0.03)
         pr = slowinput('Would you like to print stats?(y/n) ', 0.03).lower()
     if pr == 'y':
