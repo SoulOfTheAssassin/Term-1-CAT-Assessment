@@ -275,6 +275,7 @@ Quit: quits the program.''', 0.01)
                 else: 
                     break
         elif function == 'playercolour':
+            playernum = slowinput('Please choose a player: ', 0.04)     
             while playernum not in playerlist:
                 playernum = slowinput('Please choose a player: ', 0.04)                
             slowprint(f'Here is a printout of the colour list: ' + colored('grey', 'grey')+ ', ' + colored('red', 'red') + ', ' + colored('green', 'green') + ', ' + colored('yellow', 'yellow') + ', ' + colored('blue', 'blue') + ', ' + colored('magenta', 'magenta') + ', ' + colored('cyan', 'cyan') + ', ' + colored('white', 'white') + '.', 0.03)
@@ -344,7 +345,7 @@ You can only use primitive pythagorean triples.
             slowprint(colored('Player TWO', str(p2colour)) + f' colour: {p2colour}', 0.03)
             slowprint(colored('NPC', str(npccolour)) + f' colour: {npccolour}', 0.03)
             slowprint(f'Plane Size: {size} by {size}', 0.03)
-            slowprint(f'Player Size: {playersize}', 0.03)
+            slowprint(f'Buffer Size: {playersize}', 0.03)
             slowprint(f'Music Track: {music}', 0.03)
             print()
         elif function == 'music':
@@ -548,6 +549,11 @@ Midpoint Coords with Player TWO: {mid_p2_destination}
                     slowprint(colored('NPC:', npcdict['Colour']), 0.03)
                     slowprint('Please enter move in format: distance <space> direction.', 0.03)
                     npcmove = npc_move(npc_to_destination, float(npc_grad_destination), npcdict['X'], destdict['X'])
+                    npcmove1 = npcmove.split(' ')
+                    print(npcmove1)
+                    npcdistance = int(npcmove1[0])
+                    npcdirection = int(npcmove1[1])
+                    moveplayer(npcdistance, npcdirection, npcdict)
                     for char in f'Enter your move: ':
                         print(char, end='')
                         sys.stdout.flush()
@@ -557,15 +563,16 @@ Midpoint Coords with Player TWO: {mid_p2_destination}
                     slowprint('Move was successful.', 0.03)
                     win = checkwin(p1dict, p2dict, destdict, npcdict, buffersize, npcdict['Num'])
                     playerturns = 1
-                if pygame.mixer.music.get_busy() == False:
-                    musicagain = slowinput('Would you like to play again? (y/n) ', 0.04)
-                    while musicagain not in options:
-                        slowprint('Please select y or n.', 0.04)
-                        musicagain = slowinput('Would you like to play again? (y/n) ', 0.04)
-                    if musicagain == 'y':
-                        pygame.mixer.music.play()
-                    else:
-                        pygame.mixer.music.unload()
+                if music != 'off':
+                    if pygame.mixer.music.get_busy() == False:
+                        musicagain = slowinput('Would you like to play music again? (y/n) ', 0.04)
+                        while musicagain not in options:
+                            slowprint('Please select y or n.', 0.04)
+                            musicagain = slowinput('Would you like to play again? (y/n) ', 0.04)
+                        if musicagain == 'y':
+                            pygame.mixer.music.play()
+                        else:
+                            pygame.mixer.music.unload()
 
                     
             app_surf_update(destdict, p1dict, p2dict, npcdict, npctoggle)
