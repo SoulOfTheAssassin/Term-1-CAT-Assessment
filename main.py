@@ -229,7 +229,7 @@ while playagain == 'y':
     sizes = ['1','2','3','4','5','6','7','8','9','10','quit']
     buffersize = 5.0
     functionlist = ['planesize', 'togglenpc', 'buffersize', 'playercolour', 'help', 'printsettings', 'start', 'quit', 'music']
-    playerlist = [1, 2, 3]
+    playerlist = ['1', '2', '3']
     playernum = ''
     # slowprint('Here are a list of functions: ', 0.03)
     # print()
