@@ -543,7 +543,7 @@ Midpoint Coords with Player TWO: {mid_p2_destination}
                         playerturns = 3
                     else:
                         playerturns = 1
-                if playerturns == 3:
+                elif playerturns == 3:
                     print()
                     slowprint(colored('NPC:', npcdict['Colour']), 0.03)
                     slowprint('Please enter move in format: distance <space> direction.', 0.03)
@@ -554,8 +554,18 @@ Midpoint Coords with Player TWO: {mid_p2_destination}
                         time.sleep(0.03)
                     time.sleep(1)
                     slowprint(npcmove, 0.03)
+                    slowprint('Move was successful.', 0.03)
                     win = checkwin(p1dict, p2dict, destdict, npcdict, buffersize, npcdict['Num'])
                     playerturns = 1
+                if pygame.mixer.music.get_busy() == False:
+                    musicagain = slowinput('Would you like to play again? (y/n) ', 0.04)
+                    while musicagain not in options:
+                        slowprint('Please select y or n.', 0.04)
+                        musicagain = slowinput('Would you like to play again? (y/n) ', 0.04)
+                    if musicagain == 'y':
+                        pygame.mixer.music.play()
+                    else:
+                        pygame.mixer.music.unload()
 
                     
             app_surf_update(destdict, p1dict, p2dict, npcdict, npctoggle)
