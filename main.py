@@ -279,17 +279,17 @@ Quit: quits the program.''', 0.01)
                 playernum = slowinput('Please choose a player: ', 0.04)                
             slowprint(f'Here is a printout of the colour list: ' + colored('grey', 'grey')+ ', ' + colored('red', 'red') + ', ' + colored('green', 'green') + ', ' + colored('yellow', 'yellow') + ', ' + colored('blue', 'blue') + ', ' + colored('magenta', 'magenta') + ', ' + colored('cyan', 'cyan') + ', ' + colored('white', 'white') + '.', 0.03)
             print()
-            if playernum == 1:
+            if playernum == '1':
                 p1colour = slowinput('Please choose a colour: ', 0.03).lower()
                 while p1colour not in colours:
                     slowprint('Please select a colour from the list above.', 0.03)
                     p1colour = slowinput('Please choose a colour: ', 0.03).lower()
-            elif playernum == 2:
+            elif playernum == '2':
                 p2colour = slowinput('Please choose a colour: ', 0.03).lower()
                 while p2colour not in colours:
                     slowprint('Please select a colour from the list above.', 0.03)
                     p2colour = slowinput('Please choose a colour: ', 0.03).lower()
-            elif playernum == 3:
+            elif playernum == '3':
                 npccolour = slowinput('Please choose a colour: ', 0.03).lower()
                 while npccolour not in colours:
                     slowprint('Please select a colour from the list above.', 0.03)
