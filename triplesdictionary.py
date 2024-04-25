@@ -1,4 +1,4 @@
-triples = [ #last number is the actual distance
+triples = [ #1: A/Length    2: B/Width    3: C/Hypotenuse
 [3, 4, 5], 
 [5, 12, 13],
 [8, 15, 17],
