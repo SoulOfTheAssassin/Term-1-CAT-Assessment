@@ -348,8 +348,8 @@ Distance cannot be less than 5.
 #DICTIONARIES
     p1dict = {
         'Name': 'Player ONE',
-        'X': random.randint(sise,int(size/2)),
-        'Y': random.randint(sise,int(size/2)),
+        'X': random.randint(sise, int(size/2)),
+        'Y': random.randint(sise, int(size/2)),
         'Pygame Coords': None,
         'Colour': p1colour,
         'Num': 1,
