@@ -417,8 +417,9 @@ Distance cannot be less than 5.
     npc_p1_mid = remove(npc_p1_mid)
     npc_p2_mid = remove(npc_p2_mid)
 
-#OPTION TO PRINT STATS
+
     app_surf_update(destdict, p1dict, p2dict, npcdict, npctoggle)
+    #OPTION TO PRINT STATS
     options = ['y', 'n']
     pr = slowinput('Would you like to print stats?(y/n) ', 0.03).lower()
     while pr not in options:
@@ -468,12 +469,11 @@ Midpoint Coords with Player TWO: {mid_p2_destination}
 ''', 0.03)
         
         
-        
+    musicagain = 'y'    
         
 #GAME LOOP
     playerturns = 1
     win = False
-    direction = ''
     refresh_window()
     slowprint('You must click every time for each move.', 0.03)
     while win != True:
@@ -520,12 +520,13 @@ Midpoint Coords with Player TWO: {mid_p2_destination}
                     slowprint('Move was successful.', 0.03)
                     win = checkwin(p1dict, p2dict, destdict, npcdict, buffersize, npcdict['Num'])
                     playerturns = 1
-                if music != 'off': #checks whether music is on
+            if music != 'off': #checks whether music is on
+                if musicagain == 'y'
                     if pygame.mixer.music.get_busy() == False:#checks whether music is playing
                         musicagain = slowinput('Would you like to play music again? (y/n) ', 0.04)
                         while musicagain not in options:
                             slowprint('Please select y or n.', 0.04)
-                            musicagain = slowinput('Would you like to play again? (y/n) ', 0.04)
+                            musicagain = slowinput('Would you like to music play again? (y/n) ', 0.04)
                         if musicagain == 'y':
                             pygame.mixer.music.play()
                         else:
@@ -538,7 +539,6 @@ Midpoint Coords with Player TWO: {mid_p2_destination}
     playagain = slowinput('Would you like to play again? (y/n) ', 0.05).lower()#checks whether player wants to play again
     while playagain not in options:
         slowprint('Please enter y or n.', 0.06) #if yes then they loop back to the beginning
-        
         playagain = slowinput('Would you like to play again? (y/n) ', 0.05).lower()
 
 pygame.quit()
