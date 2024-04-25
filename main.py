@@ -211,7 +211,7 @@ playagain = 'y'
 
 while playagain == 'y': #play again loop
     functionloop = True
-    colours = ['grey', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'quit', 'chicken nugget']
+    colours = ['grey', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'quit']
     music = 'off'
     songs = ['1', '2', '3', '4', '5', '6', 'off', 'quit']
     p1colour = 'red'
@@ -219,7 +219,6 @@ while playagain == 'y': #play again loop
     npccolour = 'green'
     npctoggle = False
     size = 800
-    sizes = ['1','2','3','4','5','6','7','8','9','10','quit']
     buffersize = 5.0
     functionlist = ['planesize', 'togglenpc', 'buffersize', 'playercolour', 'help', 'printsettings', 'start', 'quit', 'music']
     playerlist = ['1', '2', '3']
@@ -337,7 +336,7 @@ Distance cannot be less than 5.
                 exit()
         elif function == 'quit':
             exit()
-        elif function == 'buffer':
+        elif function == 'buffersize':
             try:
                 buffer = int(input('Please enter a buffer size: '))
             except:
