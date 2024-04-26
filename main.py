@@ -4,6 +4,7 @@ import time
 import sys
 from termcolor import colored
 from triplesdictionary import triples
+from inputimeout import inputimeout
 
 
 pygame.init()
@@ -106,7 +107,6 @@ def app_surf_update(destdict:dict, p1dict:dict, p2dict:dict, npcdict:dict, npcto
     if npctoggle:
         pygame.draw.circle(app_surf, npcdict['Colour'], npcdict['Pygame Coords'], radius = 3, width = 1)
         pygame.draw.circle(app_surf, npcdict['Colour'], npcdict['Pygame Coords'], radius = float(buffersize), width = 1)
-    
 
 def refresh_window():#mr kigodi function
     pygame.display.update()
@@ -184,8 +184,15 @@ def checkwin(dictionary1:dict, dictionary2:dict, dictionary3:dict, npc:dict, buf
 def inputcheck(): #function to input move
     slowprint('Please enter move in format: distance <space> direction.', 0.03) 
     while True: 
-        move = slowinput("Enter your move: ", 0.03)
-        move = move.strip()
+        try:
+            for char in 'Enter your move: ':
+                print(char, end='')
+                sys.stdout.flush()
+                time.sleep(0.03)
+            move = inputimeout(prompt='', timeout=10)
+        except Exception:
+            slowprint('You took too long!', 0.03)
+            return random.randint(5, 100), random.randint(1,8)
         try: 
             move=move.split(" ") 
         except:
@@ -309,14 +316,6 @@ Your move must be in format: distance <space> direction.
 Direction must be 1-8.
 Distance cannot be less than 5.
 ''', 0.03)
-        elif function == 'buffersize': #changes size of buffer
-            playersize = slowinput('Please choose a size from 1-10: ', 0.03)
-            while playersize not in sizes:
-                playersize = slowinput('Please choose a number from 1-10: ', 0.03)
-            if playersize == 'quit':
-                sys.exit()
-            else:
-                playersize = int(playersize)
         elif function == 'printsettings': #prints all settings
             print()
             slowprint(colored('NPC', str(npccolour)) + f' Toggled: {npctoggle}', 0.03)#type: ignore
@@ -324,7 +323,7 @@ Distance cannot be less than 5.
             slowprint(colored('Player TWO', str(p2colour)) + f' colour: {p2colour}', 0.03) # type: ignore
             slowprint(colored('NPC', str(npccolour)) + f' colour: {npccolour}', 0.03) # type: ignore
             slowprint(f'Plane Size: {size} by {size}', 0.03)
-            slowprint(f'Buffer Size: {playersize}', 0.03)
+            slowprint(f'Buffer Size: {buffersize}', 0.03)
             slowprint(f'Music Track: {music}', 0.03)
             print()
         elif function == 'music': #selects music
@@ -521,7 +520,7 @@ Midpoint Coords with Player TWO: {mid_p2_destination}
                     win = checkwin(p1dict, p2dict, destdict, npcdict, buffersize, npcdict['Num'])
                     playerturns = 1
             if music != 'off': #checks whether music is on
-                if musicagain == 'y'
+                if musicagain == 'y':
                     if pygame.mixer.music.get_busy() == False:#checks whether music is playing
                         musicagain = slowinput('Would you like to play music again? (y/n) ', 0.04)
                         while musicagain not in options:
